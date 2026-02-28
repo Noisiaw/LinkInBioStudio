@@ -201,22 +201,43 @@ h3 {
 }
 
 input[type="text"],
-input[type="url"],
-textarea {
+.form-group input,
+.form-group textarea {
     width: 100%;
-    background-color: var(--bg-main);
-    border: 1px solid var(--border);
-    color: var(--text-primary);
-    border-radius: var(--radius-sm);
     padding: 0.75rem 1rem;
-    font-family: var(--font-body);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background-color: var(--bg-main);
+    color: var(--text-primary);
     font-size: 0.95rem;
+    /* Assuming --transition-bounce is defined elsewhere or should be transition: all 0.3s ease-in-out; */
+    /* Assuming --card-bg and --text-color are meant to be --bg-main and --text-primary */
+    transition: all 0.3s ease-in-out;
+    font-family: 'Inter', sans-serif;
     outline: none;
+}
+
+/* Social Inputs Grid */
+.social-inputs-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.social-inputs-grid .form-group {
+    margin-bottom: 0;
+}
+
+.social-inputs-grid label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 input[type="text"]:focus,
 input[type="url"]:focus,
-textarea:focus {
+textarea:focus,
+.form-group input:focus {
     border-color: var(--accent);
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
