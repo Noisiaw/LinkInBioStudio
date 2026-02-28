@@ -31,11 +31,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const deviceScreen = document.getElementById('preview-screen');
     const profileImageFrame = document.querySelector('.profile-image');
 
+    // Auth & Image Elements
+    const authTriggerBtn = document.getElementById('auth-trigger-btn');
+    const authTriggerText = document.getElementById('auth-trigger-text');
+    const authModal = document.getElementById('auth-modal');
+    const closeAuthBtn = document.getElementById('close-auth-btn');
+    const authTitle = document.getElementById('auth-title');
+    const authNameGroup = document.getElementById('auth-name-group');
+    const authActionBtn = document.getElementById('auth-action-btn');
+    const authSwitchText = document.getElementById('auth-switch-text');
+    const authSwitchBtn = document.getElementById('auth-switch-btn');
+    const profileImageUpload = document.getElementById('profile-image-upload');
+    const removeImageBtn = document.getElementById('remove-image-btn');
+
     // --- State ---
     let appData = {
         profileUsername: 'benim-ismim',
         profileName: 'Hoşgeldin 👋',
         profileBio: 'Bu benim yeni dijital kartvizitim!',
+        profileImage: '', // Base64 string for image
         theme: 'dark', // editor theme
         bgColor: '#0f172a', // preview background
         accentColor: '#3b82f6', // preview accent
@@ -105,6 +119,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
         bioInput.addEventListener('input', (e) => {
             appData.profileBio = e.target.value;
+            updatePreview();
+            autoSave();
+        });
+
+        // Profile Image Upload
+        profileImageUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    appData.profileImage = event.target.result; // base64 string
+                    updatePreview();
+                    autoSave();
+                    removeImageBtn.style.display = 'inline-block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        removeImageBtn.addEventListener('click', () => {
+            appData.profileImage = '';
+            profileImageUpload.value = '';
+            removeImageBtn.style.display = 'none';
             updatePreview();
             autoSave();
         });
@@ -202,6 +239,47 @@ document.addEventListener('DOMContentLoaded', () => {
                 copyStatus.style.opacity = '1';
             });
         });
+
+        // Auth Modal Events
+        let isLoginMode = true;
+
+        if (authTriggerBtn) {
+            authTriggerBtn.addEventListener('click', () => {
+                authModal.classList.add('active');
+            });
+        }
+
+        if (closeAuthBtn) {
+            closeAuthBtn.addEventListener('click', () => {
+                authModal.classList.remove('active');
+            });
+        }
+
+        authModal.addEventListener('click', (e) => {
+            if (e.target === authModal) {
+                authModal.classList.remove('active');
+            }
+        });
+
+        if (authSwitchBtn) {
+            authSwitchBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                isLoginMode = !isLoginMode;
+                if (isLoginMode) {
+                    authTitle.textContent = 'Giriş Yap';
+                    authNameGroup.style.display = 'none';
+                    authActionBtn.textContent = 'Giriş Yap';
+                    authSwitchText.textContent = 'Hesabın yok mu?';
+                    authSwitchBtn.textContent = 'Kayıt Ol';
+                } else {
+                    authTitle.textContent = 'Kayıt Ol';
+                    authNameGroup.style.display = 'block'; // Show name field for registration
+                    authActionBtn.textContent = 'Kayıt Ol';
+                    authSwitchText.textContent = 'Zaten hesabın var mı?';
+                    authSwitchBtn.textContent = 'Giriş Yap';
+                }
+            });
+        }
     }
 
     function renderEditorLinks() {
@@ -259,6 +337,19 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update Text
         previewName.textContent = appData.profileName || 'Your Name';
         previewBio.textContent = appData.profileBio || 'Your Bio goes here';
+
+        // Update Profile Image
+        if (appData.profileImage) {
+            profileImageFrame.innerHTML = `<img src="${appData.profileImage}" alt="Profile Image">`;
+        } else {
+            // Restore default SVG
+            profileImageFrame.innerHTML = `
+                <svg viewBox="0 0 24 24" fill="none" class="avatar-svg">
+                    <circle cx="12" cy="8" r="4" fill="currentColor" />
+                    <path d="M4 22C4 17.5817 7.58172 14 12 14C16.4183 14 20 17.5817 20 22" stroke="currentColor" stroke-width="2" />
+                </svg>
+            `;
+        }
 
         // Re-render Preview Links
         renderPreviewLinks();
@@ -388,6 +479,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 bioInput.value = appData.profileBio;
                 bgColorPicker.value = appData.bgColor;
                 accentColorPicker.value = appData.accentColor;
+
+                if (appData.profileImage) {
+                    removeImageBtn.style.display = 'inline-block';
+                }
 
                 // Populate social inputs
                 socialInputs.forEach(input => {

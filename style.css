@@ -480,7 +480,14 @@ input[type="color"]::-webkit-color-swatch {
     align-items: center;
 }
 
-.profile-image img,
+.profile-image img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #1e293b;
+    object-fit: cover;
+}
+
 .avatar-svg {
     width: 100%;
     height: 100%;
