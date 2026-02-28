@@ -56,10 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
     init();
 
     function init() {
-        if (urlPrefixDisplay) {
-            urlPrefixDisplay.textContent = window.location.host + '/?u=';
-        }
-
         // Handle View Mode vs Editor Mode
         const params = new URLSearchParams(window.location.search);
         const viewUser = params.get('u');
@@ -91,6 +87,13 @@ document.addEventListener('DOMContentLoaded', () => {
             let val = e.target.value.replace(/[^a-zA-Z0-9-]/g, '').toLowerCase();
             e.target.value = val;
             appData.profileUsername = val;
+
+            // Update the display text above the input
+            const usernameDisplay = document.getElementById('url-username-preview');
+            if (usernameDisplay) {
+                usernameDisplay.textContent = val || 'isim';
+            }
+
             autoSave();
         });
 
@@ -376,6 +379,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Populate editor inputs
                 usernameInput.value = appData.profileUsername || 'benim-ismim';
+                const usernameDisplay = document.getElementById('url-username-preview');
+                if (usernameDisplay) {
+                    usernameDisplay.textContent = appData.profileUsername || 'benim-ismim';
+                }
+
                 nameInput.value = appData.profileName;
                 bioInput.value = appData.profileBio;
                 bgColorPicker.value = appData.bgColor;
