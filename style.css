@@ -282,7 +282,7 @@ textarea {
     padding-top: 0.5rem;
 }
 
-.link-inputs {
+.link-details {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -694,23 +694,39 @@ body.view-mode .preview-container {
 @media (max-width: 900px) {
     .app-container {
         flex-direction: column;
+        height: auto;
+        min-height: 100vh;
     }
 
     .editor-section {
         width: 100%;
         max-width: 100%;
-        height: 50vh;
+        height: auto;
         border-right: none;
         border-bottom: 1px solid var(--border);
     }
 
+    .editor-content {
+        overflow-y: visible;
+        padding: 1.5rem 1rem;
+    }
+
+    .editor-footer {
+        position: sticky;
+        bottom: 0;
+        z-index: 100;
+        box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.5);
+    }
+
     .preview-section {
-        height: 50vh;
-        padding: 2rem 0;
+        height: auto;
+        padding: 3rem 1rem;
     }
 
     .device-mockup {
-        transform: scale(0.8);
-        transform-origin: center top;
+        width: 100%;
+        max-width: 360px;
+        margin: 0 auto;
+        transform: none;
     }
 }
