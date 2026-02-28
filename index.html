@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkInBio - Digital Business Card Generator</title>
+    <!-- Google Fonts: Inter and Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+
+        <!-- Editor Section (Left) -->
+        <section class="editor-section">
+            <header class="editor-header">
+                <div class="logo">
+                    <i class="fa-solid fa-link"></i> LinkInBio Studio
+                </div>
+                <button id="theme-toggle" class="icon-btn" title="Toggle Theme">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+            </header>
+
+            <div class="editor-content">
+                <div class="card">
+                    <h2>Profile Information</h2>
+
+                    <!-- NEW: Username / Custom Link -->
+                    <div class="form-group url-claim-group">
+                        <label for="profile-username">Your Custom Link</label>
+                        <div class="url-input-wrapper">
+                            <span class="url-prefix" id="url-prefix-display">you.com/?u=</span>
+                            <input type="text" id="profile-username" value="yourname" placeholder="yourname">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="profile-name">Name</label>
+                        <input type="text" id="profile-name" value="Your Name" placeholder="e.g. Jane Doe">
+                    </div>
+                    <div class="form-group">
+                        <label for="profile-bio">Bio</label>
+                        <textarea id="profile-bio" rows="2"
+                            placeholder="e.g. Digital Creator & Developer">Digital Creator & Developer</textarea>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="flex-between">
+                        <h2>Links</h2>
+                        <button id="add-link-btn" class="sm-btn"><i class="fa-solid fa-plus"></i> Add New Link</button>
+                    </div>
+
+                    <div id="links-container">
+                        <!-- Link items will be injected here via JS -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Theme Colors</h2>
+                    <div class="color-picker-group">
+                        <div class="color-item">
+                            <input type="color" id="bg-color-picker" value="#0f172a">
+                            <label>Background</label>
+                        </div>
+                        <div class="color-item">
+                            <input type="color" id="accent-color-picker" value="#3b82f6">
+                            <label>Accent</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="editor-footer">
+                <div class="footer-buttons">
+                    <button id="export-btn" class="primary-btn"><i class="fa-solid fa-download"></i> Save</button>
+                    <button id="share-btn" class="primary-btn share-btn-style"><i class="fa-solid fa-share-nodes"></i>
+                        Share</button>
+                </div>
+                <div id="save-status" class="status-msg">Changes saved locally</div>
+            </div>
+        </section>
+
+        <!-- Preview Section (Right) -->
+        <section class="preview-section">
+            <div class="device-mockup">
+                <div class="device-notch"></div>
+                <div class="device-screen" id="preview-screen">
+                    <div class="preview-container">
+
+                        <div class="preview-header">
+                            <div class="profile-image">
+                                <!-- Default SVG Avatar -->
+                                <svg viewBox="0 0 24 24" fill="none" class="avatar-svg">
+                                    <circle cx="12" cy="8" r="4" fill="currentColor" />
+                                    <path d="M4 22C4 17.5817 7.58172 14 12 14C16.4183 14 20 17.5817 20 22"
+                                        stroke="currentColor" stroke-width="2" />
+                                </svg>
+                            </div>
+                            <h1 id="preview-name">Your Name</h1>
+                            <p id="preview-bio">Digital Creator & Developer</p>
+
+                            <!-- Preset Social Icons (Optional display) -->
+                            <div class="social-icons">
+                                <a href="#" class="social-icon"><i class="fa-brands fa-instagram"></i></a>
+                                <a href="#" class="social-icon"><i class="fa-brands fa-twitter"></i></a>
+                                <a href="#" class="social-icon"><i class="fa-brands fa-github"></i></a>
+                            </div>
+                        </div>
+
+                        <div class="preview-links" id="preview-links-container">
+                            <!-- Preview links injected here via JS -->
+                        </div>
+
+                        <div class="preview-footer">
+                            <p>Created with LinkInBio</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- NEW: Share Modal -->
+    <div id="share-modal" class="modal-overlay">
+        <div class="modal-content card">
+            <button id="close-modal-btn" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+            <h2>Your Link is Ready! 🚀</h2>
+            <p>Share this link with your audience:</p>
+
+            <div class="share-link-box">
+                <span id="final-share-link">http://localhost:8080/?u=yourname</span>
+                <button id="copy-link-btn" class="primary-btn copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+            </div>
+            <div id="copy-status" class="status-msg text-accent">Link copied to clipboard!</div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
