@@ -32,32 +32,33 @@
 
             <div class="editor-content">
                 <div class="card">
-                    <h2>Profile Information</h2>
+                    <h2>Profil Bilgileri</h2>
 
                     <!-- NEW: Username / Custom Link -->
                     <div class="form-group url-claim-group">
-                        <label for="profile-username">Your Custom Link</label>
+                        <label for="profile-username">Kendi Linkiniz</label>
                         <div class="url-input-wrapper">
                             <span class="url-prefix" id="url-prefix-display">you.com/?u=</span>
-                            <input type="text" id="profile-username" value="yourname" placeholder="yourname">
+                            <input type="text" id="profile-username" value="benim-ismim" placeholder="ismim">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="profile-name">Name</label>
-                        <input type="text" id="profile-name" value="Your Name" placeholder="e.g. Jane Doe">
+                        <label for="profile-name">İsim</label>
+                        <input type="text" id="profile-name" value="Hoşgeldin 👋" placeholder="Örn: Ahmet Yılmaz">
                     </div>
                     <div class="form-group">
-                        <label for="profile-bio">Bio</label>
+                        <label for="profile-bio">Biyografi</label>
                         <textarea id="profile-bio" rows="2"
-                            placeholder="e.g. Digital Creator & Developer">Digital Creator & Developer</textarea>
+                            placeholder="Örn: Dijital İçerik Üreticisi">Bu benim yeni dijital kartvizitim!</textarea>
                     </div>
                 </div>
 
                 <div class="card">
                     <div class="flex-between">
-                        <h2>Links</h2>
-                        <button id="add-link-btn" class="sm-btn"><i class="fa-solid fa-plus"></i> Add New Link</button>
+                        <h2>Bağlantılar</h2>
+                        <button id="add-link-btn" class="sm-btn"><i class="fa-solid fa-plus"></i> Yeni Link
+                            Ekle</button>
                     </div>
 
                     <div id="links-container">
@@ -106,8 +107,8 @@
                                         stroke="currentColor" stroke-width="2" />
                                 </svg>
                             </div>
-                            <h1 id="preview-name">Your Name</h1>
-                            <p id="preview-bio">Digital Creator & Developer</p>
+                            <h1 id="preview-name">Hoşgeldin 👋</h1>
+                            <p id="preview-bio">Bu benim yeni dijital kartvizitim!</p>
 
                             <!-- Preset Social Icons (Optional display) -->
                             <div class="social-icons">
@@ -136,14 +137,15 @@
     <div id="share-modal" class="modal-overlay">
         <div class="modal-content card">
             <button id="close-modal-btn" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
-            <h2>Your Link is Ready! 🚀</h2>
-            <p>Share this link with your audience:</p>
+            <h2>Linkin Hazır! 🚀</h2>
+            <p>Bu bağlantıyı takipçilerinle paylaş:</p>
 
             <div class="share-link-box">
-                <span id="final-share-link">http://localhost:8080/?u=yourname</span>
-                <button id="copy-link-btn" class="primary-btn copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                <span id="final-share-link">http://localhost:8080/?u=benim-ismim</span>
+                <button id="copy-link-btn" class="primary-btn copy-btn"><i class="fa-regular fa-copy"></i>
+                    Kopyala</button>
             </div>
-            <div id="copy-status" class="status-msg text-accent">Link copied to clipboard!</div>
+            <div id="copy-status" class="status-msg text-accent">Bağlantı panoya kopyalandı!</div>
         </div>
     </div>
 

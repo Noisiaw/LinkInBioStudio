@@ -31,9 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- State ---
     let appData = {
-        profileUsername: 'yourname',
-        profileName: 'Your Name',
-        profileBio: 'Digital Creator & Developer',
+        profileUsername: 'benim-ismim',
+        profileName: 'Hoşgeldin 👋',
+        profileBio: 'Bu benim yeni dijital kartvizitim!',
         theme: 'dark', // editor theme
         bgColor: '#0f172a', // preview background
         accentColor: '#3b82f6', // preview accent
@@ -303,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 appData = { ...appData, ...parsed };
 
                 // Populate editor inputs
-                usernameInput.value = appData.profileUsername || 'yourname';
+                usernameInput.value = appData.profileUsername || 'benim-ismim';
                 nameInput.value = appData.profileName;
                 bioInput.value = appData.profileBio;
                 bgColorPicker.value = appData.bgColor;
