@@ -66,10 +66,43 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Global State
+    let userSession = null;
+
+    // --- Supabase Init ---
+    const supabaseUrl = 'https://wieturwgmmhafbhxnfne.supabase.co';
+    const supabaseKey = 'sb_publishable_MEv5951ejOcOKTF44WX9aw_wcY-BT8q';
+    let _supabase = null;
+    if (window.supabase) {
+        _supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    }
+
     // --- Initialization ---
     init();
 
     function init() {
+        if (_supabase) {
+            // Watch for Auth changes
+            _supabase.auth.onAuthStateChange((event, session) => {
+                userSession = session;
+                if (session) {
+                    // Update UI for logged-in user
+                    if (authTriggerBtn) {
+                        authTriggerBtn.innerHTML = '<i class="fa-solid fa-right-from-bracket"></i> <span id="auth-trigger-text">Çıkış Yap</span>';
+                        authTriggerBtn.style.backgroundColor = 'var(--bg-secondary)';
+                        authTriggerBtn.style.color = 'var(--text-secondary)';
+                    }
+                    if (authModal.classList.contains('active')) authModal.classList.remove('active');
+                } else {
+                    // Update UI for logged-out user
+                    if (authTriggerBtn) {
+                        authTriggerBtn.innerHTML = '<i class="fa-solid fa-user"></i> <span id="auth-trigger-text">Giriş Yap</span>';
+                        authTriggerBtn.style.backgroundColor = 'var(--accent)';
+                        authTriggerBtn.style.color = 'white';
+                    }
+                }
+            });
+        }
         // Handle View Mode vs Editor Mode
         const params = new URLSearchParams(window.location.search);
         const viewUser = params.get('u');
@@ -244,8 +277,15 @@ document.addEventListener('DOMContentLoaded', () => {
         let isLoginMode = true;
 
         if (authTriggerBtn) {
-            authTriggerBtn.addEventListener('click', () => {
-                authModal.classList.add('active');
+            authTriggerBtn.addEventListener('click', async () => {
+                if (userSession && _supabase) {
+                    // Sign out
+                    await _supabase.auth.signOut();
+                } else {
+                    // Open Login Modal
+                    authModal.classList.add('active');
+                    document.getElementById('auth-error-msg').textContent = '';
+                }
             });
         }
 
@@ -265,6 +305,9 @@ document.addEventListener('DOMContentLoaded', () => {
             authSwitchBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 isLoginMode = !isLoginMode;
+                const errorMsg = document.getElementById('auth-error-msg');
+                if (errorMsg) errorMsg.textContent = '';
+
                 if (isLoginMode) {
                     authTitle.textContent = 'Giriş Yap';
                     authNameGroup.style.display = 'none';
@@ -277,6 +320,60 @@ document.addEventListener('DOMContentLoaded', () => {
                     authActionBtn.textContent = 'Kayıt Ol';
                     authSwitchText.textContent = 'Zaten hesabın var mı?';
                     authSwitchBtn.textContent = 'Giriş Yap';
+                }
+            });
+        }
+
+        // Supabase Login/Register Submission
+        if (authActionBtn && _supabase) {
+            authActionBtn.addEventListener('click', async () => {
+                const email = document.getElementById('auth-email-input').value;
+                const password = document.getElementById('auth-password-input').value;
+                const name = document.getElementById('auth-name-input').value;
+                const errorMsg = document.getElementById('auth-error-msg');
+
+                if (!email || !password || (!isLoginMode && !name)) {
+                    errorMsg.textContent = 'Lütfen tüm alanları doldurun!';
+                    errorMsg.style.color = 'var(--danger)';
+                    return;
+                }
+
+                errorMsg.textContent = 'İşleminiz yapılıyor, lütfen bekleyin...';
+                errorMsg.style.color = 'var(--text-secondary)';
+
+                if (!isLoginMode) {
+                    // Registration Flow
+                    const { data, error } = await _supabase.auth.signUp({
+                        email: email,
+                        password: password,
+                        options: {
+                            data: { full_name: name, }
+                        }
+                    });
+
+                    if (error) {
+                        errorMsg.textContent = error.message.includes('weak_password') ? 'Şifre en az 6 karakter olmalıdır.' : error.message;
+                        errorMsg.style.color = 'var(--danger)';
+                    } else {
+                        errorMsg.textContent = 'Kayıt başarılı! Lütfen giriş yapın.';
+                        errorMsg.style.color = '#10b981'; // emerald green
+                        setTimeout(() => { authSwitchBtn.click(); }, 1500); // switch to login mode automatically
+                    }
+                } else {
+                    // Login Flow
+                    const { data, error } = await _supabase.auth.signInWithPassword({
+                        email: email,
+                        password: password,
+                    });
+
+                    if (error) {
+                        errorMsg.textContent = 'Hatalı e-posta veya şifre!';
+                        errorMsg.style.color = 'var(--danger)';
+                    } else {
+                        errorMsg.textContent = 'Giriş başarılı!';
+                        errorMsg.style.color = '#10b981';
+                        // Modal closes automatically via onAuthStateChange hook
+                    }
                 }
             });
         }
