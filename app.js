@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function init() {
         if (_supabase) {
             // Watch for Auth changes
-            _supabase.auth.onAuthStateChange((event, session) => {
+            _supabase.auth.onAuthStateChange(async (event, session) => {
                 userSession = session;
                 if (session) {
                     // Update UI for logged-in user
@@ -93,6 +93,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         authTriggerBtn.style.color = 'var(--text-secondary)';
                     }
                     if (authModal.classList.contains('active')) authModal.classList.remove('active');
+
+                    // Load Profile Data from Supabase
+                    await loadProfileFromDB(session.user.id);
                 } else {
                     // Update UI for logged-out user
                     if (authTriggerBtn) {
@@ -100,24 +103,33 @@ document.addEventListener('DOMContentLoaded', () => {
                         authTriggerBtn.style.backgroundColor = 'var(--accent)';
                         authTriggerBtn.style.color = 'white';
                     }
+                    // Load from LocalStorage if logged out
+                    loadFromLocalStorage();
                 }
             });
         }
+
         // Handle View Mode vs Editor Mode
         const params = new URLSearchParams(window.location.search);
         const viewUser = params.get('u');
 
         if (viewUser) {
+            // View Mode
             document.body.classList.add('view-mode');
-            // In a real app we would fetch the user 'viewUser' data from a DB here.
-            // For this local tech demo, we'll just display whatever is in localStorage
-            // to simulate that the profile page has loaded.
-        }
+            document.querySelector('.editor-section').style.display = 'none';
+            document.querySelector('.preview-section').classList.add('view-mode-active');
 
-        loadData();
-        renderEditorLinks();
-        updatePreview();
-        applyEditorTheme();
+            // Fetch public profile by username
+            loadPublicProfile(viewUser);
+        } else {
+            // Editor Mode
+            document.querySelector('.editor-section').style.display = 'block';
+            document.querySelector('.preview-section').classList.remove('view-mode-active');
+
+            // Note: Initial load is now handled by onAuthStateChange callback
+            // which fires immediately on page load to set the session.
+        }
+        // applyEditorTheme() is called by updateEditorUI now
         bindEvents();
     }
 
@@ -226,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Export/Save manually
         exportBtn.addEventListener('click', () => {
-            saveData();
+            autoSave(); // Now calls autoSave which handles both local and remote
             showSaveStatus('Data saved successfully!');
             // In a real app, this might generate a static HTML file to download.
         });
@@ -533,11 +545,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Data Persistence ---
 
-    function autoSave() {
-        saveData();
-        showSaveStatus('Autosaved');
-    }
-
     let saveTimeout;
     function showSaveStatus(msg) {
         saveStatus.textContent = msg;
@@ -548,47 +555,183 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 2000);
     }
 
-    function saveData() {
-        localStorage.setItem('linkInBioData', JSON.stringify(appData));
+    // --- Core Logic ---
+
+    async function loadProfileFromDB(userId) {
+        if (!_supabase) return;
+
+        try {
+            const { data, error } = await _supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', userId)
+                .single();
+
+            if (error) {
+                console.error("Error fetching profile from DB:", error);
+                return;
+            }
+
+            if (data) {
+                appData = {
+                    profileUsername: data.username || 'benim-ismim',
+                    profileName: data.full_name || 'Hoşgeldin 👋',
+                    profileBio: data.bio || '',
+                    profileImage: data.profile_image || '',
+                    theme: data.theme || 'dark',
+                    bgColor: data.bg_color || '#0f172a',
+                    accentColor: data.accent_color || '#3b82f6',
+                    links: data.links || [],
+                    socials: data.socials || {}
+                };
+
+                updateEditorUI();
+                renderEditorLinks();
+                updatePreview();
+            }
+        } catch (err) {
+            console.error(err);
+        }
     }
 
-    function loadData() {
-        const saved = localStorage.getItem('linkInBioData');
-        if (saved) {
-            try {
-                const parsed = JSON.parse(saved);
+    function updateEditorUI() {
+        // Populate editor inputs from appData
+        usernameInput.value = appData.profileUsername;
+        const usernameDisplay = document.getElementById('url-username-preview');
+        if (usernameDisplay) {
+            usernameDisplay.textContent = appData.profileUsername;
+        }
 
+        nameInput.value = appData.profileName;
+        bioInput.value = appData.profileBio;
+        bgColorPicker.value = appData.bgColor;
+        accentColorPicker.value = appData.accentColor;
+
+        if (appData.profileImage) {
+            removeImageBtn.style.display = 'inline-block';
+        } else {
+            removeImageBtn.style.display = 'none';
+        }
+
+        // Populate social inputs
+        socialInputs.forEach(input => {
+            const platform = input.dataset.platform;
+            if (appData.socials && appData.socials[platform]) {
+                input.value = appData.socials[platform];
+            } else {
+                input.value = '';
+            }
+        });
+
+        applyEditorTheme(); // Renamed from applyTheme to match existing function
+    }
+
+    function loadFromLocalStorage() {
+        const savedData = localStorage.getItem('linkInBioData');
+        if (savedData) {
+            try {
+                const parsed = JSON.parse(savedData);
                 // Ensure socials object exists (for backward compatibility if user already saved data before this update)
                 if (!parsed.socials) {
                     parsed.socials = { instagram: '', twitter: '', linkedin: '', github: '', youtube: '' };
                 }
-
                 appData = { ...appData, ...parsed };
-
-                // Populate editor inputs
-                usernameInput.value = appData.profileUsername || 'benim-ismim';
-                const usernameDisplay = document.getElementById('url-username-preview');
-                if (usernameDisplay) {
-                    usernameDisplay.textContent = appData.profileUsername || 'benim-ismim';
-                }
-
-                nameInput.value = appData.profileName;
-                bioInput.value = appData.profileBio;
-                bgColorPicker.value = appData.bgColor;
-                accentColorPicker.value = appData.accentColor;
-
-                if (appData.profileImage) {
-                    removeImageBtn.style.display = 'inline-block';
-                }
-
-                // Populate social inputs
-                socialInputs.forEach(input => {
-                    input.value = appData.socials[input.dataset.platform] || '';
-                });
-
+                updateEditorUI();
             } catch (e) {
-                console.error("Error loading saved data", e);
+                console.error("Error parsing local storage", e);
             }
+        }
+        renderEditorLinks();
+        updatePreview();
+    }
+
+    async function autoSave() {
+        // Always save to LocalStorage as a fallback
+        localStorage.setItem('linkInBioData', JSON.stringify(appData));
+
+        // Save to Database if logged in
+        if (userSession && _supabase) {
+            try {
+                // Determine save payload
+                const payload = {
+                    username: appData.profileUsername,
+                    full_name: appData.profileName,
+                    bio: appData.profileBio,
+                    theme: appData.theme,
+                    bg_color: appData.bgColor,
+                    accent_color: appData.accentColor,
+                    profile_image: appData.profileImage, // Base64
+                    links: appData.links, // JSON array
+                    socials: appData.socials // JSON object
+                };
+
+                const { error } = await _supabase
+                    .from('profiles')
+                    .update(payload)
+                    .eq('id', userSession.user.id);
+
+                if (error) {
+                    // Try inserting instead if update fails because row doesn't exist despite trigger
+                    const { error: insertErr } = await _supabase.from('profiles').insert([
+                        { id: userSession.user.id, ...payload }
+                    ]);
+
+                    if (insertErr) {
+                        console.error("Supabase Save Error:", error, insertErr);
+                        showSaveStatus('Buluta kaydedilemedi!');
+                        return;
+                    }
+                }
+                showSaveStatus('Buluta kaydedildi ✓');
+            } catch (err) {
+                console.error(err);
+            }
+        } else {
+            showSaveStatus('Okal kaydedildi ✓');
+        }
+    }
+
+    async function loadPublicProfile(username) {
+        if (!_supabase) return;
+
+        try {
+            const { data, error } = await _supabase
+                .from('profiles')
+                .select('*')
+                .eq('username', username)
+                .single();
+
+            if (error || !data) {
+                console.error("Profile not found:", error);
+                document.getElementById('preview-name').textContent = "Profile Not Found";
+                document.getElementById('preview-bio').textContent = "This user does not exist or hasn't saved their profile yet.";
+                return;
+            }
+
+            // Map data to appData to properly reuse rendering logic
+            appData = {
+                profileUsername: data.username,
+                profileName: data.full_name || '',
+                profileBio: data.bio || '',
+                profileImage: data.profile_image || '',
+                theme: data.theme || 'dark',
+                bgColor: data.bg_color || '#0f172a',
+                accentColor: data.accent_color || '#3b82f6',
+                links: data.links || [],
+                socials: data.socials || {}
+            };
+
+            // Render view with fetched db parameters
+            renderPreviewLinks();
+            updatePreview();
+
+            // Set root theme colors explicitly for View Mode since we hid the editor and bypass applyEditorTheme
+            document.documentElement.style.setProperty('--bg-main', appData.bgColor);
+            document.documentElement.style.setProperty('--accent', appData.accentColor);
+            document.body.style.backgroundColor = appData.bgColor;
+
+        } catch (err) {
+            console.error(err);
         }
     }
 });
