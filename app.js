@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Add Link
         addLinkBtn.addEventListener('click', () => {
-            const newLink = { id: generateId(), title: 'New Link', url: 'https://', clicks: 0 };
+            const newLink = { id: generateId(), title: 'New Link', url: 'https://', clicks: 0, type: 'button' };
             appData.links.push(newLink);
             renderEditorLinks();
             updatePreview();
@@ -397,6 +397,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         appData.links.forEach((link, index) => {
             const clicks = link.clicks || 0;
+            const type = link.type || 'button';
+
             const linkEl = document.createElement('div');
             linkEl.className = 'link-edit-item';
             linkEl.innerHTML = `
@@ -404,6 +406,11 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="link-details">
                 <input type="text" class="link-title-input" value="${link.title}" data-id="${link.id}" placeholder="Link Title">
                 <input type="url" class="link-url-input" value="${link.url}" data-id="${link.id}" placeholder="https://example.com">
+                <select class="link-type-select" data-id="${link.id}" style="margin-top: 0.5rem; width: 100%; border-radius: var(--radius-sm); border: 1px solid var(--border); padding: 0.4rem; background-color: var(--bg-main); color: var(--text-primary); outline: none;">
+                    <option value="button" ${type === 'button' ? 'selected' : ''}>🔗 Normal Buton</option>
+                    <option value="youtube" ${type === 'youtube' ? 'selected' : ''}>▶️ YouTube Video (Gömülü)</option>
+                    <option value="spotify" ${type === 'spotify' ? 'selected' : ''}>🎧 Spotify (Gömülü)</option>
+                </select>
                 <div class="link-analytics text-xs text-secondary" style="margin-top: 5px; font-size: 0.75rem;"><i class="fa-solid fa-hand-pointer"></i> ${clicks} Tıklanma</div>
             </div>
             <button class="icon-btn delete-link-btn text-danger" data-id="${link.id}" title="Delete Link">
@@ -557,6 +564,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 const id = e.target.getAttribute('data-id');
                 const link = appData.links.find(l => l.id === id);
                 if (link) link.url = e.target.value;
+                updatePreview();
+                autoSave();
+            });
+        });
+
+        document.querySelectorAll('.link-type-select').forEach(select => {
+            select.addEventListener('change', (e) => {
+                const id = e.target.getAttribute('data-id');
+                const link = appData.links.find(l => l.id === id);
+                if (link) link.type = e.target.value;
                 updatePreview();
                 autoSave();
             });
