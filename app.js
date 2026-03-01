@@ -382,6 +382,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Share & Modal Events
+        // Analytics Modal Events
+        if (analyticsSummaryBtn) {
+            analyticsSummaryBtn.addEventListener('click', () => {
+                openAnalyticsModal();
+            });
+        }
+
+        if (closeAnalyticsBtn) {
+            closeAnalyticsBtn.addEventListener('click', () => {
+                analyticsModal.classList.remove('active');
+            });
+        }
+
+        // Close analytics modal on outside click
+        if (analyticsModal) {
+            analyticsModal.addEventListener('click', (e) => {
+                if (e.target === analyticsModal) {
+                    analyticsModal.classList.remove('active');
+                }
+            });
+        }
+
+        // Share & Modal Events
         shareBtn.addEventListener('click', () => {
             const currentOrigin = window.location.origin;
             const shareUrl = `${currentOrigin}/?u=${appData.profileUsername || 'yourname'}`;
@@ -404,50 +427,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 shareModal.classList.remove('active');
             }
         });
-
-        // Analytics Modal Events
-        if (analyticsSummaryBtn) {
-            analyticsSummaryBtn.addEventListener('click', () => {
-                openAnalyticsModal();
-            });
-        }
-
-        if (closeAnalyticsBtn) {
-            closeAnalyticsBtn.addEventListener('click', () => {
-                analyticsModal.classList.remove('active');
-            });
-        }
-
-        // Close analytics modal on outside click
-        if (analyticsModal) {
-            analyticsModal.addEventListener('click', (e) => {
-                if (e.target === analyticsModal) {
-                    analyticsModal.classList.remove('active');
-                }
-            });
-        }
-
-        // Analytics Modal Events
-        if (analyticsSummaryBtn) {
-            analyticsSummaryBtn.addEventListener('click', () => {
-                openAnalyticsModal();
-            });
-        }
-
-        if (closeAnalyticsBtn) {
-            closeAnalyticsBtn.addEventListener('click', () => {
-                analyticsModal.classList.remove('active');
-            });
-        }
-
-        // Close analytics modal on outside click
-        if (analyticsModal) {
-            analyticsModal.addEventListener('click', (e) => {
-                if (e.target === analyticsModal) {
-                    analyticsModal.classList.remove('active');
-                }
-            });
-        }
 
         copyLinkBtn.addEventListener('click', () => {
             const textToCopy = finalShareLink.textContent;
