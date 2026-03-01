@@ -428,10 +428,27 @@ document.addEventListener('DOMContentLoaded', () => {
             youtube: 'fa-youtube'
         };
 
-        for (const [platform, url] of Object.entries(appData.socials)) {
-            if (url && url.trim() !== '') {
+        // Map platform name to base URL
+        const urlMap = {
+            instagram: 'https://instagram.com/',
+            twitter: 'https://x.com/',
+            linkedin: 'https://linkedin.com/in/',
+            github: 'https://github.com/',
+            youtube: 'https://youtube.com/@'
+        };
+
+        for (const [platform, username] of Object.entries(appData.socials)) {
+            if (username && username.trim() !== '') {
                 const a = document.createElement('a');
-                a.href = url.startsWith('http') ? url : `https://${url}`;
+
+                // Construct the URL using the base URL + username
+                // If the user pasted a full URL by mistake, use it directly
+                let finalUrl = username.trim();
+                if (!finalUrl.startsWith('http')) {
+                    finalUrl = `${urlMap[platform]}${finalUrl.replace('@', '')}`; // Ensure no double @ for youtube/twitter
+                }
+
+                a.href = finalUrl;
                 a.className = 'social-icon';
                 a.target = '_blank';
                 // Add rel attribute if opening external link
