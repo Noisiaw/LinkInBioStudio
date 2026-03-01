@@ -134,9 +134,24 @@
         <!-- Preview Section (Right) -->
         <section class="preview-section">
             <!-- Floating Theme Controls -->
-            <div class="theme-controls-floating card">
-                <h2 style="font-size: 1rem; margin-bottom: 0.75rem;">Tema Renkleri</h2>
-                <div class="color-picker-group">
+            <div class="theme-controls-floating card" style="width: max-content; min-width: 300px;">
+                <h2 style="font-size: 1rem; margin-bottom: 0.75rem;">Görünüm ve Tema</h2>
+
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                    <label style="font-size: 0.8rem;">Hazır Şablonlar</label>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" id="theme-selector-group">
+                        <button class="sm-btn theme-preset-btn active" data-theme="default"
+                            style="flex: 1;">Klasik</button>
+                        <button class="sm-btn theme-preset-btn" data-theme="glassmorphism" style="flex: 1;">Buzlu
+                            Cam</button>
+                        <button class="sm-btn theme-preset-btn" data-theme="animated-aurora"
+                            style="flex: 1;">Aurora</button>
+                        <button class="sm-btn theme-preset-btn" data-theme="minimal-dark"
+                            style="flex: 1;">Minimal</button>
+                    </div>
+                </div>
+
+                <div class="color-picker-group" id="color-picker-group-container">
                     <div class="color-item">
                         <input type="color" id="bg-color-picker" value="#0f172a">
                         <label>Arka Plan</label>

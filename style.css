@@ -637,6 +637,149 @@ input[type="color"]::-webkit-color-swatch {
     font-size: 1.2rem;
 }
 
+.link-edit-header-item {
+    background-color: var(--bg-secondary);
+    border-left: 4px solid var(--accent);
+}
+
+.preview-link-header {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: left;
+    width: 100%;
+    color: #fff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 0.25rem;
+}
+
+/* Rich Media Embed Styles */
+.preview-embed-youtube {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-md);
+    margin-bottom: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.preview-embed-spotify {
+    width: 100%;
+    height: 80px;
+    border-radius: 12px;
+    margin-bottom: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* =========================================
+   THEME PRESETS (Glass, Aurora, Minimal)
+   ========================================= */
+
+/* GLASSMORPHISM */
+[data-page-theme="glassmorphism"].view-mode,
+.editor-section~.preview-section [data-page-theme="glassmorphism"] {
+    background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.3), transparent 50%),
+        radial-gradient(circle at bottom left, rgba(139, 92, 246, 0.3), transparent 50%),
+        #0f172a !important;
+}
+
+[data-page-theme="glassmorphism"] .preview-link-btn,
+[data-page-theme="glassmorphism"] .preview-link-header,
+[data-page-theme="glassmorphism"] .preview-embed-youtube,
+[data-page-theme="glassmorphism"] .preview-embed-spotify {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(16px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-page-theme="glassmorphism"] .profile-image {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* ANIMATED AURORA */
+@keyframes aurora-bg {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+[data-page-theme="animated-aurora"].view-mode,
+.editor-section~.preview-section [data-page-theme="animated-aurora"] {
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab) !important;
+    background-size: 400% 400% !important;
+    animation: aurora-bg 15s ease infinite !important;
+}
+
+[data-page-theme="animated-aurora"] .preview-link-btn,
+[data-page-theme="animated-aurora"] .preview-link-header {
+    background: rgba(0, 0, 0, 0.25) !important;
+    backdrop-filter: blur(8px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+}
+
+[data-page-theme="animated-aurora"] .profile-image {
+    border: 2px solid rgba(255, 255, 255, 0.5) !important;
+    background: transparent !important;
+}
+
+/* MINIMAL DARK */
+[data-page-theme="minimal-dark"].view-mode,
+.editor-section~.preview-section [data-page-theme="minimal-dark"] {
+    background: #000000 !important;
+}
+
+[data-page-theme="minimal-dark"] .preview-link-btn,
+[data-page-theme="minimal-dark"] .preview-link-header {
+    background: transparent !important;
+    border: 1px solid #333 !important;
+    border-radius: 4px !important;
+    color: #fff !important;
+    box-shadow: none !important;
+}
+
+[data-page-theme="minimal-dark"] .preview-link-btn:hover {
+    border-color: #fff !important;
+    background: #111 !important;
+}
+
+[data-page-theme="minimal-dark"] .profile-image {
+    background: transparent !important;
+    border: 2px solid #fff !important;
+    border-radius: 4px !important;
+    padding: 4px !important;
+}
+
+[data-page-theme="minimal-dark"] .profile-image img,
+[data-page-theme="minimal-dark"] .avatar-svg {
+    border-radius: 2px !important;
+}
+
+[data-page-theme="minimal-dark"] .social-icon {
+    border: 1px solid #333 !important;
+    border-radius: 4px !important;
+    padding: 0.4rem !important;
+    color: #fff !important;
+}
+
+[data-page-theme="minimal-dark"] .social-icon:hover {
+    background: #111 !important;
+    border-color: #fff !important;
+}
+
 .preview-footer {
     margin-top: auto;
     font-size: 0.75rem;
