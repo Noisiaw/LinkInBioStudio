@@ -63,7 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
             linkedin: '',
             github: '',
             youtube: ''
-        }
+        },
+        views: 0
     };
 
     // Global State
@@ -210,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Add Link
         addLinkBtn.addEventListener('click', () => {
-            const newLink = { id: generateId(), title: 'New Link', url: 'https://' };
+            const newLink = { id: generateId(), title: 'New Link', url: 'https://', clicks: 0 };
             appData.links.push(newLink);
             renderEditorLinks();
             updatePreview();
@@ -395,6 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
         linksContainer.innerHTML = '';
 
         appData.links.forEach((link, index) => {
+            const clicks = link.clicks || 0;
             const linkEl = document.createElement('div');
             linkEl.className = 'link-edit-item';
             linkEl.innerHTML = `
@@ -402,6 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="link-details">
                 <input type="text" class="link-title-input" value="${link.title}" data-id="${link.id}" placeholder="Link Title">
                 <input type="url" class="link-url-input" value="${link.url}" data-id="${link.id}" placeholder="https://example.com">
+                <div class="link-analytics text-xs text-secondary" style="margin-top: 5px; font-size: 0.75rem;"><i class="fa-solid fa-hand-pointer"></i> ${clicks} Tıklanma</div>
             </div>
             <button class="icon-btn delete-link-btn text-danger" data-id="${link.id}" title="Delete Link">
                 <i class="fa-solid fa-trash-can"></i>
@@ -498,6 +501,16 @@ document.addEventListener('DOMContentLoaded', () => {
             if (document.body.classList.contains('view-mode')) {
                 a.target = '_blank';
                 a.rel = 'noopener noreferrer';
+
+                // Track link click in view mode
+                a.addEventListener('click', () => {
+                    if (_supabase && appData.profileUsername) {
+                        _supabase.rpc('increment_link_click', {
+                            p_username: appData.profileUsername,
+                            p_link_id: link.id
+                        }).then(() => console.log('Click tracked')).catch(e => console.error(e));
+                    }
+                });
             } else {
                 // In editor mode avoid actual navigation locally
                 a.addEventListener('click', e => e.preventDefault());
@@ -599,7 +612,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     bgColor: data.bg_color || '#0f172a',
                     accentColor: data.accent_color || '#3b82f6',
                     links: data.links || [],
-                    socials: data.socials || {}
+                    socials: data.socials || {},
+                    views: data.views || 0
                 };
 
                 updateEditorUI();
@@ -628,6 +642,11 @@ document.addEventListener('DOMContentLoaded', () => {
             removeImageBtn.style.display = 'flex';
         } else {
             removeImageBtn.style.display = 'none';
+        }
+
+        const totalViewsDisplay = document.getElementById('total-views-display');
+        if (totalViewsDisplay) {
+            totalViewsDisplay.textContent = appData.views || 0;
         }
 
         // Populate social inputs
@@ -735,12 +754,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 bgColor: data.bg_color || '#0f172a',
                 accentColor: data.accent_color || '#3b82f6',
                 links: data.links || [],
-                socials: data.socials || {}
+                socials: data.socials || {},
+                views: data.views || 0
             };
 
             // Render view with fetched db parameters
             renderPreviewLinks();
             updatePreview();
+
+            // Increment views via RPC when public profile is loaded
+            if (_supabase) {
+                _supabase.rpc('increment_profile_view', { p_username: username })
+                    .catch(err => console.error("Could not increment view:", err));
+            }
 
             // Set root theme colors explicitly for View Mode since we hid the editor and bypass applyEditorTheme
             document.documentElement.style.setProperty('--bg-main', appData.bgColor);
