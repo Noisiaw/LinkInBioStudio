@@ -51,15 +51,7 @@
                             placeholder="İstediğiniz kullanıcı adı (Örn: ahmet-yilmaz)" style="margin-top: 0.5rem;">
                     </div>
 
-                    <div class="form-group">
-                        <label>Profil Fotoğrafı</label>
-                        <div style="display:flex; align-items:center; gap:0.5rem;">
-                            <input type="file" id="profile-image-upload" accept="image/png, image/jpeg, image/webp"
-                                style="padding:0.5rem; font-size: 0.85rem;">
-                            <button id="remove-image-btn" class="icon-btn text-danger" title="Fotoğrafı Kaldır"
-                                style="display:none;"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </div>
+
 
                     <div class="form-group">
                         <label for="profile-name">İsim</label>
@@ -154,13 +146,28 @@
                     <div class="preview-container">
 
                         <div class="preview-header">
-                            <div class="profile-image">
-                                <!-- Default SVG Avatar -->
-                                <svg viewBox="0 0 24 24" fill="none" class="avatar-svg">
-                                    <circle cx="12" cy="8" r="4" fill="currentColor" />
-                                    <path d="M4 22C4 17.5817 7.58172 14 12 14C16.4183 14 20 17.5817 20 22"
-                                        stroke="currentColor" stroke-width="2" />
-                                </svg>
+                            <!-- Profile Image with Hover Upload -->
+                            <div class="profile-image-wrapper">
+                                <div class="profile-image">
+                                    <!-- Default SVG Avatar -->
+                                    <svg viewBox="0 0 24 24" fill="none" class="avatar-svg">
+                                        <circle cx="12" cy="8" r="4" fill="currentColor" />
+                                        <path d="M4 22C4 17.5817 7.58172 14 12 14C16.4183 14 20 17.5817 20 22"
+                                            stroke="currentColor" stroke-width="2" />
+                                    </svg>
+                                </div>
+
+                                <label for="profile-image-upload" class="profile-image-upload-label"
+                                    title="Fotoğraf Yükle">
+                                    <i class="fa-solid fa-camera"></i>
+                                </label>
+                                <input type="file" id="profile-image-upload" accept="image/png, image/jpeg, image/webp"
+                                    class="hidden-upload">
+
+                                <button id="remove-image-btn" class="remove-image-btn-floating text-danger"
+                                    title="Fotoğrafı Kaldır" style="display:none;">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
                             </div>
                             <h1 id="preview-name">Hoşgeldin 👋</h1>
                             <p id="preview-bio">Bu benim yeni dijital kartvizitim!</p>

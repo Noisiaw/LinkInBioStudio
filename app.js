@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     appData.profileImage = event.target.result; // base64 string
                     updatePreview();
                     autoSave();
-                    removeImageBtn.style.display = 'inline-block';
+                    removeImageBtn.style.display = 'flex'; // Changed to flex for center alignment
                 };
                 reader.readAsDataURL(file);
             }
@@ -608,7 +608,7 @@ document.addEventListener('DOMContentLoaded', () => {
         accentColorPicker.value = appData.accentColor;
 
         if (appData.profileImage) {
-            removeImageBtn.style.display = 'inline-block';
+            removeImageBtn.style.display = 'flex';
         } else {
             removeImageBtn.style.display = 'none';
         }
