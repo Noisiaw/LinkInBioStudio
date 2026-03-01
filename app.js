@@ -31,6 +31,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalTotalClicks = document.getElementById('modal-total-clicks');
     const linkStatsList = document.getElementById('link-stats-list');
 
+    // Add Item Modals
+    const addLinkModal = document.getElementById('add-link-modal');
+    const closeAddLinkBtn = document.getElementById('close-add-link-btn');
+    const submitNewLinkBtn = document.getElementById('submit-new-link-btn');
+    const newLinkTitleInput = document.getElementById('new-link-title');
+    const newLinkUrlInput = document.getElementById('new-link-url');
+    const newLinkTypeInput = document.getElementById('new-link-type');
+
+    const addHeaderModal = document.getElementById('add-header-modal');
+    const closeAddHeaderBtn = document.getElementById('close-add-header-btn');
+    const submitNewHeaderBtn = document.getElementById('submit-new-header-btn');
+    const newHeaderTitleInput = document.getElementById('new-header-title');
+
     // Preview Elements
     const previewName = document.getElementById('preview-name');
     const previewBio = document.getElementById('preview-bio');
@@ -256,27 +269,62 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Add Link
-        addLinkBtn.addEventListener('click', () => {
-            const newLink = { id: generateId(), title: 'New Link', url: 'https://', clicks: 0, type: 'button' };
-            appData.links.push(newLink);
-            renderEditorLinks();
-            updatePreview();
-            autoSave();
+        // Add Link Modal Triggers
+        if (addLinkBtn && addLinkModal) {
+            addLinkBtn.addEventListener('click', () => {
+                newLinkTitleInput.value = '';
+                newLinkUrlInput.value = 'https://';
+                newLinkTypeInput.value = 'button';
+                addLinkModal.classList.add('active');
+            });
 
-            // Scroll to bottom of links
-            setTimeout(() => {
-                const el = document.querySelector('.editor-content');
-                el.scrollTop = el.scrollHeight;
-            }, 50);
-        });
+            closeAddLinkBtn.addEventListener('click', () => addLinkModal.classList.remove('active'));
 
-        // Add Header
+            addLinkModal.addEventListener('click', (e) => {
+                if (e.target === addLinkModal) addLinkModal.classList.remove('active');
+            });
+
+            submitNewLinkBtn.addEventListener('click', () => {
+                const title = newLinkTitleInput.value.trim() || 'Yeni Link';
+                const url = newLinkUrlInput.value.trim() || 'https://';
+                const type = newLinkTypeInput.value;
+
+                const newLink = { id: generateId(), title, url, clicks: 0, type };
+                appData.links.push(newLink);
+                addLinkModal.classList.remove('active');
+
+                renderEditorLinks();
+                updatePreview();
+                autoSave();
+
+                setTimeout(() => {
+                    const el = document.querySelector('.editor-content');
+                    el.scrollTop = el.scrollHeight;
+                }, 50);
+            });
+        }
+
+        // Add Header Modal Triggers
         const addHeaderBtn = document.getElementById('add-header-btn');
-        if (addHeaderBtn) {
+        if (addHeaderBtn && addHeaderModal) {
             addHeaderBtn.addEventListener('click', () => {
-                const newHeader = { id: generateId(), title: 'Yeni Başlık', type: 'header' };
+                newHeaderTitleInput.value = '';
+                addHeaderModal.classList.add('active');
+            });
+
+            closeAddHeaderBtn.addEventListener('click', () => addHeaderModal.classList.remove('active'));
+
+            addHeaderModal.addEventListener('click', (e) => {
+                if (e.target === addHeaderModal) addHeaderModal.classList.remove('active');
+            });
+
+            submitNewHeaderBtn.addEventListener('click', () => {
+                const title = newHeaderTitleInput.value.trim() || 'Yeni Başlık';
+
+                const newHeader = { id: generateId(), title, type: 'header' };
                 appData.links.push(newHeader);
+                addHeaderModal.classList.remove('active');
+
                 renderEditorLinks();
                 updatePreview();
                 autoSave();

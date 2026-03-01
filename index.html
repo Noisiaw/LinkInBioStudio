@@ -131,37 +131,9 @@
             </div>
         </section>
 
-        <!-- Preview Section (Right) -->
+        <!-- Preview Section (Center) -->
         <section class="preview-section">
-            <!-- Floating Theme Controls -->
-            <div class="theme-controls-floating card" style="width: max-content; min-width: 300px;">
-                <h2 style="font-size: 1rem; margin-bottom: 0.75rem;">Görünüm ve Tema</h2>
 
-                <div class="form-group" style="margin-bottom: 1.25rem;">
-                    <label style="font-size: 0.8rem;">Hazır Şablonlar</label>
-                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" id="theme-selector-group">
-                        <button class="sm-btn theme-preset-btn active" data-theme="default"
-                            style="flex: 1;">Klasik</button>
-                        <button class="sm-btn theme-preset-btn" data-theme="glassmorphism" style="flex: 1;">Buzlu
-                            Cam</button>
-                        <button class="sm-btn theme-preset-btn" data-theme="animated-aurora"
-                            style="flex: 1;">Aurora</button>
-                        <button class="sm-btn theme-preset-btn" data-theme="minimal-dark"
-                            style="flex: 1;">Minimal</button>
-                    </div>
-                </div>
-
-                <div class="color-picker-group" id="color-picker-group-container">
-                    <div class="color-item">
-                        <input type="color" id="bg-color-picker" value="#0f172a">
-                        <label>Arka Plan</label>
-                    </div>
-                    <div class="color-item">
-                        <input type="color" id="accent-color-picker" value="#3b82f6">
-                        <label>Vurgu</label>
-                    </div>
-                </div>
-            </div>
 
             <div class="device-mockup">
                 <div class="device-notch"></div>
@@ -214,6 +186,93 @@
             </div>
         </section>
 
+        <!-- Theme Section (Right) -->
+        <section class="theme-section">
+            <div class="card" style="margin-top: 1.5rem;">
+                <h2 style="font-size: 1.2rem; margin-bottom: 1rem;"><i class="fa-solid fa-palette text-accent"></i>
+                    Görünüm ve Tema</h2>
+
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label style="font-size: 0.9rem;">Hazır Şablonlar</label>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;"
+                        id="theme-selector-group">
+                        <button class="sm-btn theme-preset-btn active" data-theme="default"
+                            style="flex: 1; min-width: 45%;">Klasik</button>
+                        <button class="sm-btn theme-preset-btn" data-theme="glassmorphism"
+                            style="flex: 1; min-width: 45%;">Buzlu Cam</button>
+                        <button class="sm-btn theme-preset-btn" data-theme="animated-aurora"
+                            style="flex: 1; min-width: 45%;">Aurora</button>
+                        <button class="sm-btn theme-preset-btn" data-theme="minimal-dark"
+                            style="flex: 1; min-width: 45%;">Minimal</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label style="font-size: 0.9rem;">Özel Renkler</label>
+                    <div class="color-picker-group" id="color-picker-group-container"
+                        style="flex-direction: column; gap: 1rem; margin-top: 0.5rem;">
+                        <div class="color-item" style="width: 100%;">
+                            <input type="color" id="bg-color-picker" value="#0f172a"
+                                style="width: 100%; height: 40px; border-radius: var(--radius-sm); border: none; cursor: pointer;">
+                            <label style="margin-top: 0.5rem; display: block;">Arka Plan</label>
+                        </div>
+                        <div class="color-item" style="width: 100%;">
+                            <input type="color" id="accent-color-picker" value="#3b82f6"
+                                style="width: 100%; height: 40px; border-radius: var(--radius-sm); border: none; cursor: pointer;">
+                            <label style="margin-top: 0.5rem; display: block;">Vurgu (Butonlar)</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- NEW: Add Link Modal -->
+    <div id="add-link-modal" class="modal-overlay">
+        <div class="modal-content card" style="max-width: 400px;">
+            <button id="close-add-link-btn" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+            <h2 style="margin-bottom: 1.5rem;"><i class="fa-solid fa-link text-accent"></i> Yeni Link Ekle</h2>
+
+            <div class="form-group" style="text-align: left;">
+                <label for="new-link-title">Link Başlığı</label>
+                <input type="text" id="new-link-title" placeholder="Örn: Instagram, Web Sitem">
+            </div>
+
+            <div class="form-group" style="text-align: left;">
+                <label for="new-link-url">URL</label>
+                <input type="url" id="new-link-url" placeholder="https://..." value="https://">
+            </div>
+
+            <div class="form-group" style="text-align: left;">
+                <label for="new-link-type">Link Türü</label>
+                <select id="new-link-type"
+                    style="width: 100%; border-radius: var(--radius-md); border: 1px solid var(--border); padding: 0.75rem 1rem; background-color: var(--bg-main); color: var(--text-primary); outline: none;">
+                    <option value="button">Standart Buton</option>
+                    <option value="youtube">YouTube Embed (Video)</option>
+                    <option value="spotify">Spotify Embed (Müzik)</option>
+                </select>
+            </div>
+
+            <button id="submit-new-link-btn" class="primary-btn" style="margin-top: 1rem; width: 100%;">Listeye
+                Ekle</button>
+        </div>
+    </div>
+
+    <!-- NEW: Add Header Modal -->
+    <div id="add-header-modal" class="modal-overlay">
+        <div class="modal-content card" style="max-width: 400px;">
+            <button id="close-add-header-btn" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+            <h2 style="margin-bottom: 1.5rem;"><i class="fa-solid fa-heading text-accent"></i> Yeni Alt Başlık Ekle</h2>
+
+            <div class="form-group" style="text-align: left;">
+                <label for="new-header-title">Başlık Metni</label>
+                <input type="text" id="new-header-title" placeholder="Örn: Favori Linklerim">
+            </div>
+
+            <button id="submit-new-header-btn" class="primary-btn" style="margin-top: 1rem; width: 100%;">Listeye
+                Ekle</button>
+        </div>
     </div>
 
     <!-- NEW: Share Modal -->
