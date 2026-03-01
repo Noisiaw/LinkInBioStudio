@@ -224,6 +224,23 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 50);
         });
 
+        // Add Header
+        const addHeaderBtn = document.getElementById('add-header-btn');
+        if (addHeaderBtn) {
+            addHeaderBtn.addEventListener('click', () => {
+                const newHeader = { id: generateId(), title: 'Yeni Başlık', type: 'header' };
+                appData.links.push(newHeader);
+                renderEditorLinks();
+                updatePreview();
+                autoSave();
+
+                setTimeout(() => {
+                    const el = document.querySelector('.editor-content');
+                    el.scrollTop = el.scrollHeight;
+                }, 50);
+            });
+        }
+
         // Colors
         bgColorPicker.addEventListener('input', (e) => {
             appData.bgColor = e.target.value;
@@ -400,23 +417,37 @@ document.addEventListener('DOMContentLoaded', () => {
             const type = link.type || 'button';
 
             const linkEl = document.createElement('div');
-            linkEl.className = 'link-edit-item';
-            linkEl.innerHTML = `
-                <div class="link-drag-handle"><i class="fa-solid fa-grip-vertical"></i></div>
-            <div class="link-details">
-                <input type="text" class="link-title-input" value="${link.title}" data-id="${link.id}" placeholder="Link Title">
-                <input type="url" class="link-url-input" value="${link.url}" data-id="${link.id}" placeholder="https://example.com">
-                <select class="link-type-select" data-id="${link.id}" style="margin-top: 0.5rem; width: 100%; border-radius: var(--radius-sm); border: 1px solid var(--border); padding: 0.4rem; background-color: var(--bg-main); color: var(--text-primary); outline: none;">
-                    <option value="button" ${type === 'button' ? 'selected' : ''}>🔗 Normal Buton</option>
-                    <option value="youtube" ${type === 'youtube' ? 'selected' : ''}>▶️ YouTube Video (Gömülü)</option>
-                    <option value="spotify" ${type === 'spotify' ? 'selected' : ''}>🎧 Spotify (Gömülü)</option>
-                </select>
-                <div class="link-analytics text-xs text-secondary" style="margin-top: 5px; font-size: 0.75rem;"><i class="fa-solid fa-hand-pointer"></i> ${clicks} Tıklanma</div>
-            </div>
-            <button class="icon-btn delete-link-btn text-danger" data-id="${link.id}" title="Delete Link">
-                <i class="fa-solid fa-trash-can"></i>
-            </button>
-        `;
+
+            if (type === 'header') {
+                linkEl.className = 'link-edit-item link-edit-header-item';
+                linkEl.innerHTML = `
+                    <div class="link-drag-handle"><i class="fa-solid fa-grip-vertical"></i></div>
+                    <div class="link-details">
+                        <input type="text" class="link-title-input" value="${link.title}" data-id="${link.id}" placeholder="Başlık Adı" style="font-weight: bold;">
+                    </div>
+                    <button class="icon-btn delete-link-btn text-danger" data-id="${link.id}" title="Başlığı Sil">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                `;
+            } else {
+                linkEl.className = 'link-edit-item';
+                linkEl.innerHTML = `
+                    <div class="link-drag-handle"><i class="fa-solid fa-grip-vertical"></i></div>
+                <div class="link-details">
+                    <input type="text" class="link-title-input" value="${link.title}" data-id="${link.id}" placeholder="Link Title">
+                    <input type="url" class="link-url-input" value="${link.url}" data-id="${link.id}" placeholder="https://example.com">
+                    <select class="link-type-select" data-id="${link.id}" style="margin-top: 0.5rem; width: 100%; border-radius: var(--radius-sm); border: 1px solid var(--border); padding: 0.4rem; background-color: var(--bg-main); color: var(--text-primary); outline: none;">
+                        <option value="button" ${type === 'button' ? 'selected' : ''}>🔗 Normal Buton</option>
+                        <option value="youtube" ${type === 'youtube' ? 'selected' : ''}>▶️ YouTube Video (Gömülü)</option>
+                        <option value="spotify" ${type === 'spotify' ? 'selected' : ''}>🎧 Spotify (Gömülü)</option>
+                    </select>
+                    <div class="link-analytics text-xs text-secondary" style="margin-top: 5px; font-size: 0.75rem;"><i class="fa-solid fa-hand-pointer"></i> ${clicks} Tıklanma</div>
+                </div>
+                <button class="icon-btn delete-link-btn text-danger" data-id="${link.id}" title="Delete Link">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            `;
+            }
             linksContainer.appendChild(linkEl);
         });
 
@@ -499,31 +530,81 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderPreviewLinks() {
         previewLinksContainer.innerHTML = '';
         appData.links.forEach(link => {
-            const a = document.createElement('a');
-            a.href = link.url.startsWith('http') ? link.url : `https://${link.url}`;
-            a.className = 'preview-link-btn';
-            a.textContent = link.title || 'Untitled Link';
+            const type = link.type || 'button';
+            let targetUrl = '';
+            if (link.url) targetUrl = link.url.startsWith('http') ? link.url : `https://${link.url}`;
 
-            // if we are in view mode, open in new tab
-            if (document.body.classList.contains('view-mode')) {
-                a.target = '_blank';
-                a.rel = 'noopener noreferrer';
-
-                // Track link click in view mode
-                a.addEventListener('click', () => {
-                    if (_supabase && appData.profileUsername) {
-                        _supabase.rpc('increment_link_click', {
-                            p_username: appData.profileUsername,
-                            p_link_id: link.id
-                        }).then(() => console.log('Click tracked')).catch(e => console.error(e));
-                    }
-                });
-            } else {
-                // In editor mode avoid actual navigation locally
-                a.addEventListener('click', e => e.preventDefault());
+            if (type === 'header') {
+                const h3 = document.createElement('h3');
+                h3.className = 'preview-link-header';
+                h3.textContent = link.title || 'Başlık';
+                previewLinksContainer.appendChild(h3);
             }
+            else if (type === 'youtube') {
+                let videoId = '';
+                try {
+                    const urlObj = new URL(targetUrl);
+                    if (urlObj.hostname.includes('youtube.com')) {
+                        videoId = urlObj.searchParams.get('v');
+                    } else if (urlObj.hostname.includes('youtu.be')) {
+                        videoId = urlObj.pathname.slice(1);
+                    }
+                } catch (e) { }
 
-            previewLinksContainer.appendChild(a);
+                if (videoId) {
+                    const iframe = document.createElement('iframe');
+                    iframe.className = 'preview-embed-youtube';
+                    iframe.src = `https://www.youtube.com/embed/${videoId}`;
+                    iframe.title = link.title || 'YouTube video';
+                    iframe.frameBorder = '0';
+                    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+                    iframe.allowFullscreen = true;
+                    previewLinksContainer.appendChild(iframe);
+                } else {
+                    const a = document.createElement('a');
+                    a.href = targetUrl;
+                    a.className = 'preview-link-btn';
+                    a.textContent = `[YT Hata] ${link.title}`;
+                    a.target = '_blank';
+                    previewLinksContainer.appendChild(a);
+                }
+            }
+            else if (type === 'spotify') {
+                let embedUrl = targetUrl;
+                if (targetUrl.includes('open.spotify.com')) {
+                    embedUrl = targetUrl.replace('open.spotify.com/', 'open.spotify.com/embed/');
+                }
+                const iframe = document.createElement('iframe');
+                iframe.className = 'preview-embed-spotify';
+                iframe.src = embedUrl;
+                iframe.frameBorder = '0';
+                iframe.allowFullscreen = true;
+                iframe.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
+                previewLinksContainer.appendChild(iframe);
+            }
+            else {
+                const a = document.createElement('a');
+                a.href = targetUrl;
+                a.className = 'preview-link-btn';
+                a.textContent = link.title || 'Untitled Link';
+
+                if (document.body.classList.contains('view-mode')) {
+                    a.target = '_blank';
+                    a.rel = 'noopener noreferrer';
+                    a.addEventListener('click', () => {
+                        if (_supabase && appData.profileUsername) {
+                            _supabase.rpc('increment_link_click', {
+                                p_username: appData.profileUsername,
+                                p_link_id: link.id
+                            }).catch(e => console.error(e));
+                        }
+                    });
+                } else {
+                    a.addEventListener('click', e => e.preventDefault());
+                }
+
+                previewLinksContainer.appendChild(a);
+            }
         });
     }
 
