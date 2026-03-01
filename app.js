@@ -231,11 +231,21 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Theme Toggle
+        // Theme Toggle (Dark/Light Mode)
         themeToggle.addEventListener('click', () => {
             appData.theme = appData.theme === 'dark' ? 'light' : 'dark';
             applyEditorTheme();
             autoSave();
+        });
+
+        // Theme Presets (Glass, Aurora, Minimal, etc.)
+        document.querySelectorAll('.theme-preset-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const target = e.currentTarget;
+                appData.pageTheme = target.getAttribute('data-theme');
+                updatePreviewStyles();
+                autoSave();
+            });
         });
 
         // Add Link
@@ -644,8 +654,19 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update accent colors
         profileImageFrame.style.background = `linear-gradient(135deg, ${appData.accentColor}, #8b5cf6)`;
 
-        // Ensure text contrast (simple approach: white text on dark backgrounds)
-        // In a more advanced implementation, we would calculate luminance.
+        // Apply Theme Preset
+        const currentTheme = appData.pageTheme || 'default';
+        document.body.setAttribute('data-page-theme', currentTheme);
+        document.querySelector('.preview-section').setAttribute('data-page-theme', currentTheme);
+
+        // Sync buttons UI inside the editor
+        document.querySelectorAll('.theme-preset-btn').forEach(b => {
+            if (b.getAttribute('data-theme') === currentTheme) {
+                b.classList.add('active');
+            } else {
+                b.classList.remove('active');
+            }
+        });
     }
 
     function applyEditorTheme() {
@@ -736,6 +757,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     profileBio: data.bio || '',
                     profileImage: data.profile_image || '',
                     theme: data.theme || 'dark',
+                    pageTheme: data.theme_preset || 'default',
                     bgColor: data.bg_color || '#0f172a',
                     accentColor: data.accent_color || '#3b82f6',
                     links: data.links || [],
@@ -821,6 +843,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     full_name: appData.profileName,
                     bio: appData.profileBio,
                     theme: appData.theme,
+                    theme_preset: appData.pageTheme,
                     bg_color: appData.bgColor,
                     accent_color: appData.accentColor,
                     profile_image: appData.profileImage, // Base64
