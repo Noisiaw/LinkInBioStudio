@@ -138,13 +138,42 @@ document.addEventListener('DOMContentLoaded', () => {
         return Math.random().toString(36).substr(2, 9);
     }
 
+    // --- Security Helpers ---
+    function sanitizeHTML(str) {
+        if (!str) return '';
+        const temp = document.createElement('div');
+        temp.textContent = str;
+        return temp.innerHTML;
+    }
+
+    function isValidUsername(username) {
+        // 3-20 chars, alphanumeric, underscores, hyphens only
+        const regex = /^[a-zA-Z0-9_-]{3,20}$/;
+        if (!regex.test(username)) return false;
+
+        // Block reserved words
+        const reserved = ['admin', 'api', 'login', 'register', 'dashboard', 'settings', 'auth'];
+        if (reserved.includes(username.toLowerCase())) return false;
+
+        return true;
+    }
+
     // --- Core Functions ---
 
     function bindEvents() {
         // Profile Inputs
         usernameInput.addEventListener('input', (e) => {
             // Sanitize username (alphanumeric and dashes only)
-            let val = e.target.value.replace(/[^a-zA-Z0-9-]/g, '').toLowerCase();
+            let val = e.target.value.trim().toLowerCase();
+
+            if (val && !isValidUsername(val)) {
+                usernameInput.style.borderColor = 'var(--danger)';
+                // Don't auto-save if invalid to prevent broken URLs in DB
+                return;
+            } else {
+                usernameInput.style.borderColor = 'var(--border)';
+            }
+
             e.target.value = val;
             appData.profileUsername = val;
 
@@ -501,9 +530,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updatePreview() {
-        // Update Text
-        previewName.textContent = appData.profileName || 'Your Name';
-        previewBio.textContent = appData.profileBio || 'Your Bio goes here';
+        // Update Text (Sanitized)
+        previewName.innerHTML = sanitizeHTML(appData.profileName) || 'Your Name';
+        previewBio.innerHTML = sanitizeHTML(appData.profileBio) || 'Your Bio goes here';
 
         // Update Profile Image
         if (appData.profileImage) {
@@ -537,7 +566,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (type === 'header') {
                 const h3 = document.createElement('h3');
                 h3.className = 'preview-link-header';
-                h3.textContent = link.title || 'Başlık';
+                h3.innerHTML = sanitizeHTML(link.title) || 'Başlık';
                 previewLinksContainer.appendChild(h3);
             }
             else if (type === 'youtube') {
@@ -586,7 +615,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const a = document.createElement('a');
                 a.href = targetUrl;
                 a.className = 'preview-link-btn';
-                a.textContent = link.title || 'Untitled Link';
+                a.innerHTML = sanitizeHTML(link.title) || 'Untitled Link';
 
                 if (document.body.classList.contains('view-mode')) {
                     a.target = '_blank';
