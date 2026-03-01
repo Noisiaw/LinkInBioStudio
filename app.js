@@ -23,6 +23,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const copyLinkBtn = document.getElementById('copy-link-btn');
     const copyStatus = document.getElementById('copy-status');
 
+    // Analytics Modal Elements
+    const analyticsSummaryBtn = document.getElementById('analytics-summary');
+    const analyticsModal = document.getElementById('analytics-modal');
+    const closeAnalyticsBtn = document.getElementById('close-analytics-btn');
+    const modalTotalViews = document.getElementById('modal-total-views');
+    const modalTotalClicks = document.getElementById('modal-total-clicks');
+    const linkStatsList = document.getElementById('link-stats-list');
+
     // Preview Elements
     const previewName = document.getElementById('preview-name');
     const previewBio = document.getElementById('preview-bio');
@@ -317,12 +325,56 @@ document.addEventListener('DOMContentLoaded', () => {
             shareModal.classList.remove('active');
         });
 
-        // Close modal on outside click
+        // Close share modal on outside click
         shareModal.addEventListener('click', (e) => {
             if (e.target === shareModal) {
                 shareModal.classList.remove('active');
             }
         });
+
+        // Analytics Modal Events
+        if (analyticsSummaryBtn) {
+            analyticsSummaryBtn.addEventListener('click', () => {
+                openAnalyticsModal();
+            });
+        }
+
+        if (closeAnalyticsBtn) {
+            closeAnalyticsBtn.addEventListener('click', () => {
+                analyticsModal.classList.remove('active');
+            });
+        }
+
+        // Close analytics modal on outside click
+        if (analyticsModal) {
+            analyticsModal.addEventListener('click', (e) => {
+                if (e.target === analyticsModal) {
+                    analyticsModal.classList.remove('active');
+                }
+            });
+        }
+
+        // Analytics Modal Events
+        if (analyticsSummaryBtn) {
+            analyticsSummaryBtn.addEventListener('click', () => {
+                openAnalyticsModal();
+            });
+        }
+
+        if (closeAnalyticsBtn) {
+            closeAnalyticsBtn.addEventListener('click', () => {
+                analyticsModal.classList.remove('active');
+            });
+        }
+
+        // Close analytics modal on outside click
+        if (analyticsModal) {
+            analyticsModal.addEventListener('click', (e) => {
+                if (e.target === analyticsModal) {
+                    analyticsModal.classList.remove('active');
+                }
+            });
+        }
 
         copyLinkBtn.addEventListener('click', () => {
             const textToCopy = finalShareLink.textContent;
@@ -645,6 +697,63 @@ document.addEventListener('DOMContentLoaded', () => {
                 previewLinksContainer.appendChild(a);
             }
         });
+    }
+
+    // --- Analytics Logic ---
+    function openAnalyticsModal() {
+        if (!analyticsModal) return;
+
+        // Populate Total Views
+        if (modalTotalViews) {
+            modalTotalViews.textContent = appData.views || 0;
+        }
+
+        // Calculate Total Clicks
+        let totalClicks = 0;
+        appData.links.forEach(link => {
+            if (link.type !== 'header') {
+                totalClicks += (link.clicks || 0);
+            }
+        });
+
+        if (modalTotalClicks) {
+            modalTotalClicks.textContent = totalClicks;
+        }
+
+        // Render Link Stats List
+        if (linkStatsList) {
+            linkStatsList.innerHTML = '';
+
+            const clickableLinks = appData.links.filter(link => link.type !== 'header');
+
+            if (clickableLinks.length === 0) {
+                linkStatsList.innerHTML = '<p class="text-secondary" style="text-align: center; margin-top: 1rem;">Henüz bir linkiniz yok.</p>';
+            } else {
+                clickableLinks.forEach(link => {
+                    const row = document.createElement('div');
+                    row.className = 'link-stat-row';
+
+                    const titleText = sanitizeHTML(link.title) || 'İsimsiz Link';
+                    let iconHtml = '<i class="fa-solid fa-link text-secondary"></i>';
+
+                    if (link.type === 'youtube') iconHtml = '<i class="fa-brands fa-youtube text-danger"></i>';
+                    if (link.type === 'spotify') iconHtml = '<i class="fa-brands fa-spotify text-success"></i>';
+
+                    row.innerHTML = `
+                        <div class="link-stat-title">
+                            ${iconHtml} <span>${titleText}</span>
+                        </div>
+                        <div class="link-stat-clicks">
+                            ${link.clicks || 0} tık
+                        </div>
+                    `;
+                    linkStatsList.appendChild(row);
+                });
+            }
+        }
+
+        // Show Modal
+        analyticsModal.classList.add('active');
     }
 
     function updatePreviewStyles() {

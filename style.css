@@ -955,4 +955,66 @@ body.view-mode .preview-container {
         margin: 0 auto;
         transform: none;
     }
+
+    /* --- ANALYTICS MODAL STYLES --- */
+    .stat-blocks {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .stat-box {
+        flex: 1;
+        background: linear-gradient(135deg, var(--bg-main) 0%, var(--bg-secondary) 100%);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 1.5rem 1rem;
+        text-align: center;
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        color: var(--text-primary);
+        font-family: var(--font-heading);
+    }
+
+    .link-stat-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .link-stat-row:last-child {
+        border-bottom: none;
+    }
+
+    .link-stat-title {
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .link-stat-clicks {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        background: var(--bg-main);
+        padding: 0.2rem 0.6rem;
+        border-radius: var(--radius-pill);
+        border: 1px solid var(--border);
+    }
+
+    #analytics-summary:hover {
+        background-color: var(--border) !important;
+    }
 }
