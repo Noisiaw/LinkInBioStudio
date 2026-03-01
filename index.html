@@ -70,36 +70,11 @@
 
                 <div class="card">
                     <h2>Sosyal Medya İkonları</h2>
-                    <p class="text-xs text-accent" style="margin-bottom:1rem;">(Sadece kullanıcı adı girdiğiniz ikonlar
-                        görünür.
-                        Örn: instagram için sadece <b>kullaniciadi</b> yazın.)</p>
-                    <div class="social-inputs-grid">
-                        <div class="form-group">
-                            <label><i class="fa-brands fa-instagram"></i> Instagram</label>
-                            <input type="text" id="social-instagram" class="social-input" data-platform="instagram"
-                                placeholder="kullaniciadi">
-                        </div>
-                        <div class="form-group">
-                            <label><i class="fa-brands fa-x-twitter"></i> X (Twitter)</label>
-                            <input type="text" id="social-twitter" class="social-input" data-platform="twitter"
-                                placeholder="kullaniciadi">
-                        </div>
-                        <div class="form-group">
-                            <label><i class="fa-brands fa-linkedin"></i> LinkedIn</label>
-                            <input type="text" id="social-linkedin" class="social-input" data-platform="linkedin"
-                                placeholder="kullaniciadi">
-                        </div>
-                        <div class="form-group">
-                            <label><i class="fa-brands fa-github"></i> GitHub</label>
-                            <input type="text" id="social-github" class="social-input" data-platform="github"
-                                placeholder="kullaniciadi">
-                        </div>
-                        <div class="form-group">
-                            <label><i class="fa-brands fa-youtube"></i> YouTube</label>
-                            <input type="text" id="social-youtube" class="social-input" data-platform="youtube"
-                                placeholder="kanaladi">
-                        </div>
-                    </div>
+                    <p class="text-xs text-secondary" style="margin-bottom:1rem;">Profilinde görünecek olan iletişim
+                        ikonlarını yönet.</p>
+                    <button id="manage-socials-btn" class="primary-btn"
+                        style="width: 100%; border: 1px solid var(--border); background-color: var(--bg-secondary); color: var(--text-primary);"><i
+                            class="fa-solid fa-icons text-accent"></i> Hesaplarımı Yönet</button>
                 </div>
 
                 <div class="card">
@@ -272,6 +247,48 @@
 
             <button id="submit-new-header-btn" class="primary-btn" style="margin-top: 1rem; width: 100%;">Listeye
                 Ekle</button>
+        </div>
+    </div>
+
+    <!-- NEW: Edit Socials Modal -->
+    <div id="edit-social-modal" class="modal-overlay">
+        <div class="modal-content card" style="max-width: 450px;">
+            <button id="close-social-btn" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+            <h2 style="margin-bottom: 0.5rem;"><i class="fa-solid fa-icons text-accent"></i> Sosyal Medya</h2>
+
+            <p class="text-xs text-secondary" style="margin-bottom: 1.5rem;">Sadece kullanıcı adınızı girdiğiniz ikonlar
+                görünür. (Örn: instagram için sadece <b>kullaniciadi</b> yazın.)</p>
+
+            <div class="social-inputs-grid">
+                <div class="form-group" style="text-align: left;">
+                    <label><i class="fa-brands fa-instagram text-accent"></i> Instagram</label>
+                    <input type="text" id="social-instagram" class="social-input" data-platform="instagram"
+                        placeholder="kullaniciadi">
+                </div>
+                <div class="form-group" style="text-align: left;">
+                    <label><i class="fa-brands fa-x-twitter text-accent"></i> X (Twitter)</label>
+                    <input type="text" id="social-twitter" class="social-input" data-platform="twitter"
+                        placeholder="kullaniciadi">
+                </div>
+                <div class="form-group" style="text-align: left;">
+                    <label><i class="fa-brands fa-linkedin text-accent"></i> LinkedIn</label>
+                    <input type="text" id="social-linkedin" class="social-input" data-platform="linkedin"
+                        placeholder="kullaniciadi">
+                </div>
+                <div class="form-group" style="text-align: left;">
+                    <label><i class="fa-brands fa-github text-accent"></i> GitHub</label>
+                    <input type="text" id="social-github" class="social-input" data-platform="github"
+                        placeholder="kullaniciadi">
+                </div>
+                <div class="form-group" style="text-align: left;">
+                    <label><i class="fa-brands fa-youtube text-accent"></i> YouTube</label>
+                    <input type="text" id="social-youtube" class="social-input" data-platform="youtube"
+                        placeholder="kanaladi">
+                </div>
+            </div>
+
+            <button id="save-social-btn" class="primary-btn" style="margin-top: 1.5rem; width: 100%;">Kaydet ve
+                Kapat</button>
         </div>
     </div>
 

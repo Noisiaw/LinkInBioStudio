@@ -39,10 +39,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const newLinkUrlInput = document.getElementById('new-link-url');
     const newLinkTypeInput = document.getElementById('new-link-type');
 
-    const addHeaderModal = document.getElementById('add-header-modal');
-    const closeAddHeaderBtn = document.getElementById('close-add-header-btn');
-    const submitNewHeaderBtn = document.getElementById('submit-new-header-btn');
     const newHeaderTitleInput = document.getElementById('new-header-title');
+
+    // Social Modal Elements
+    const manageSocialsBtn = document.getElementById('manage-socials-btn');
+    const editSocialModal = document.getElementById('edit-social-modal');
+    const closeSocialBtn = document.getElementById('close-social-btn');
+    const saveSocialBtn = document.getElementById('save-social-btn');
 
     // Preview Elements
     const previewName = document.getElementById('preview-name');
@@ -251,6 +254,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 autoSave();
             });
         });
+
+        // Social Modal Events
+        if (manageSocialsBtn && editSocialModal) {
+            manageSocialsBtn.addEventListener('click', () => {
+                editSocialModal.classList.add('active');
+            });
+
+            closeSocialBtn.addEventListener('click', () => {
+                editSocialModal.classList.remove('active');
+            });
+
+            saveSocialBtn.addEventListener('click', () => {
+                editSocialModal.classList.remove('active');
+            });
+
+            // Close on outside click
+            editSocialModal.addEventListener('click', (e) => {
+                if (e.target === editSocialModal) {
+                    editSocialModal.classList.remove('active');
+                }
+            });
+        }
 
         // Theme Toggle (Dark/Light Mode)
         themeToggle.addEventListener('click', () => {
