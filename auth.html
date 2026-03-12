@@ -148,8 +148,11 @@
                 <input type="email" id="auth-email-input" class="form-input" placeholder="ornek@mail.com">
             </div>
 
-            <div class="form-group">
-                <label for="auth-password-input">Şifre</label>
+            <div class="form-group" id="auth-password-group">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <label for="auth-password-input" style="margin-bottom: 0;">Şifre</label>
+                    <a href="#" id="forgot-password-link" style="font-size: 0.8rem; color: var(--accent); text-decoration: none;">Şifremi Unuttum</a>
+                </div>
                 <input type="password" id="auth-password-input" class="form-input" placeholder="••••••••">
             </div>
 
@@ -157,7 +160,7 @@
 
             <div id="auth-error-msg" class="status-msg text-danger"></div>
 
-            <div class="auth-switch">
+            <div class="auth-switch" id="auth-switch-box">
                 <span id="auth-switch-text">Hesabın yok mu?</span>
                 <a href="#" id="auth-switch-btn" class="auth-link">Kayıt Ol</a>
             </div>
