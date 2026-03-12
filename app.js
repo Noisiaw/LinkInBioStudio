@@ -40,6 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const newLinkTypeInput = document.getElementById('new-link-type');
 
     const newHeaderTitleInput = document.getElementById('new-header-title');
+    const addHeaderModal = document.getElementById('add-header-modal');
+    const closeAddHeaderBtn = document.getElementById('close-add-header-btn');
+    const submitNewHeaderBtn = document.getElementById('submit-new-header-btn');
 
     // Social Modal Elements
     const manageSocialsBtn = document.getElementById('manage-socials-btn');
@@ -528,9 +531,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         errorMsg.textContent = error.message.includes('weak_password') ? 'Şifre en az 6 karakter olmalıdır.' : error.message;
                         errorMsg.style.color = 'var(--danger)';
                     } else {
-                        errorMsg.textContent = 'Kayıt başarılı! Lütfen giriş yapın.';
-                        errorMsg.style.color = '#10b981'; // emerald green
-                        setTimeout(() => { authSwitchBtn.click(); }, 1500); // switch to login mode automatically
+                        if (data.session) {
+                            errorMsg.textContent = 'Kayıt başarılı! Giriş yapılıyor...';
+                            errorMsg.style.color = '#10b981';
+                            setTimeout(() => { authModal.classList.remove('active'); }, 1000);
+                        } else {
+                            errorMsg.textContent = 'Kayıt başarılı! Lütfen giriş yapın.';
+                            errorMsg.style.color = '#10b981'; // emerald green
+                            setTimeout(() => { authSwitchBtn.click(); }, 1500); // switch to login mode automatically
+                        }
                     }
                 } else {
                     // Login Flow
@@ -545,7 +554,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else {
                         errorMsg.textContent = 'Giriş başarılı!';
                         errorMsg.style.color = '#10b981';
-                        // Modal closes automatically via onAuthStateChange hook
+                        setTimeout(() => { authModal.classList.remove('active'); }, 1000);
                     }
                 }
             });
@@ -907,7 +916,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 .single();
 
             if (error) {
-                console.error("Error fetching profile from DB:", error);
+                // PGRST116 means zero rows returned (not found), which is normal for a brand new user
+                if (error.code !== 'PGRST116') {
+                    console.error("Error fetching profile from DB:", error);
+                }
                 return;
             }
 
@@ -1012,22 +1024,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     socials: appData.socials // JSON object
                 };
 
-                const { error } = await _supabase
+                const { error, data } = await _supabase
                     .from('profiles')
-                    .update(payload)
-                    .eq('id', userSession.user.id);
+                    .upsert([{ id: userSession.user.id, ...payload }])
+                    .select();
 
                 if (error) {
-                    // Try inserting instead if update fails because row doesn't exist despite trigger
-                    const { error: insertErr } = await _supabase.from('profiles').insert([
-                        { id: userSession.user.id, ...payload }
-                    ]);
-
-                    if (insertErr) {
-                        console.error("Supabase Save Error:", error, insertErr);
-                        showSaveStatus('Buluta kaydedilemedi!');
-                        return;
-                    }
+                    console.error("Supabase Save Error:", error);
+                    showSaveStatus('Buluta kaydedilemedi!');
+                    return;
                 }
                 showSaveStatus('Buluta kaydedildi ✓');
             } catch (err) {
