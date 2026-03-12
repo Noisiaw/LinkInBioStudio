@@ -246,6 +246,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (txt.includes('rate limit') || txt.includes('too many requests')) return 'Güvenlik sebebiyle çok fazla deneme yaptınız. Lütfen biraz bekleyip tekrar deneyin.';
         if (txt.includes('network') || txt.includes('fetch')) return 'İnternet bağlantınızı kontrol edin.';
         if (txt.includes('weak password')) return 'Şifreniz çok zayıf, lütfen daha zor bir şifre seçin.';
+        if (txt.includes('not allowed') || txt.includes('redirect')) return 'SİSTEM HATASI: Vercel adresinizi Supabase URL Configuration (Redirect URLs) kısmına henüz eklemediniz.';
+        if (txt.includes('disabled') || txt.includes('not enabled')) return 'SİSTEM HATASI: Supabase panelinden "Confirm Email" ayarını henüz AÇIK hale getirmediniz.';
         
         return msg; // Fallback to raw message if translation is missing
     }
