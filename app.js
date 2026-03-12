@@ -61,13 +61,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Auth & Image Elements
     const authTriggerBtn = document.getElementById('auth-trigger-btn');
     const authTriggerText = document.getElementById('auth-trigger-text');
-    const authModal = document.getElementById('auth-modal');
-    const closeAuthBtn = document.getElementById('close-auth-btn');
-    const authTitle = document.getElementById('auth-title');
-    const authNameGroup = document.getElementById('auth-name-group');
-    const authActionBtn = document.getElementById('auth-action-btn');
-    const authSwitchText = document.getElementById('auth-switch-text');
-    const authSwitchBtn = document.getElementById('auth-switch-btn');
     const profileImageUpload = document.getElementById('profile-image-upload');
     const removeImageBtn = document.getElementById('remove-image-btn');
 
@@ -126,8 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         authTriggerBtn.style.backgroundColor = 'var(--bg-secondary)';
                         authTriggerBtn.style.color = 'var(--text-secondary)';
                     }
-                    if (authModal.classList.contains('active')) authModal.classList.remove('active');
-
                     // Load Profile Data from Supabase
                     await loadProfileFromDB(session.user.id);
                 } else {

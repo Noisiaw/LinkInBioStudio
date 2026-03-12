@@ -179,14 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
             userSession = session;
             if (session) {
                 // User is authenticated. Instantly redirect from landing page
-                window.location.href = 'editor.html';
-            } else {
-                // User is not authenticated. Keep Login/Register
-                authBtnsContainer.innerHTML = `
-                    <button class="primary-btn login-trigger" data-i18n="nav_login">${translations[currentLang].nav_login}</button>
-                    <button class="primary-btn outline register-trigger" data-i18n="nav_register">${translations[currentLang].nav_register}</button>
-                `;
-                bindModalTriggers();
+                window.location.href = '/editor.html';
             }
         });
     }
@@ -204,7 +197,5 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
-});
 
 });
