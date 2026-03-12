@@ -178,14 +178,8 @@ document.addEventListener('DOMContentLoaded', () => {
         _supabase.auth.onAuthStateChange((event, session) => {
             userSession = session;
             if (session) {
-                // User is authenticated. Show Dashboard Button instead of Login/Register
-                authBtnsContainer.innerHTML = `
-                    <button class="primary-btn dashboard-route-btn" data-i18n="nav_dashboard">${translations[currentLang].nav_dashboard}</button>
-                `;
-                
-                document.querySelector('.dashboard-route-btn').addEventListener('click', () => {
-                    window.location.href = '/editor.html';
-                });
+                // User is authenticated. Instantly redirect from landing page
+                window.location.href = 'editor.html';
             } else {
                 // User is not authenticated. Keep Login/Register
                 authBtnsContainer.innerHTML = `
@@ -293,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
                      if (data.session) {
                          errorMsg.textContent = 'Başarılı / Success!';
                          errorMsg.style.color = '#10b981';
-                         setTimeout(() => { window.location.href = '/editor.html'; }, 1000); // Route directly to editor
+                         setTimeout(() => { window.location.href = 'editor.html'; }, 500); // Route directly to editor
                      } else {
                          errorMsg.textContent = 'Başarılı! Lütfen giriş yapın / Success! Please login.';
                          errorMsg.style.color = '#10b981';
@@ -312,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
                  } else {
                      errorMsg.textContent = 'Giriş başarılı / Success!';
                      errorMsg.style.color = '#10b981';
-                     setTimeout(() => { window.location.href = '/editor.html'; }, 1000); // Route directly to editor
+                     setTimeout(() => { window.location.href = 'editor.html'; }, 500); // Route directly to editor
                  }
              }
         });
