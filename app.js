@@ -466,9 +466,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- Logout Event ---
         if (authTriggerBtn) {
             authTriggerBtn.addEventListener('click', async () => {
-                if (userSession && _supabase) {
+                if (_supabase) {
                     await _supabase.auth.signOut();
-                    window.location.href = '/'; // Go back to landing
+                    localStorage.removeItem('lb_app_data');
+                    window.location.replace('/'); // Go back to landing
                 }
             });
         }

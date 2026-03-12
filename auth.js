@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const { error } = await _supabase.auth.updateUser({ password: password });
                 
                 if (error) {
-                    errorMsg.textContent = error.message;
+                    errorMsg.textContent = translateAuthError(error.message);
                     errorMsg.style.color = 'var(--danger)';
                 } else {
                     errorMsg.textContent = 'Şifreniz başarıyla güncellendi! Editöre yönlendiriliyorsunuz...';
@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
                  });
 
                  if (error) {
-                     errorMsg.textContent = error.message;
+                     errorMsg.textContent = translateAuthError(error.message);
                      errorMsg.style.color = 'var(--danger)';
                  } else {
                      // Show Success Screen
@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
                  });
 
                  if (error) {
-                     errorMsg.textContent = error.message;
+                     errorMsg.textContent = translateAuthError(error.message);
                      errorMsg.style.color = 'var(--danger)';
                  } else {
                      if (data.session) {
@@ -214,12 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
                  });
 
                  if (error) {
-                     // Check if it's an email unconfirmed error (Supabase standard response for this is often 'Email not confirmed')
-                     if (error.message.toLowerCase().includes('email not confirmed')) {
-                         errorMsg.textContent = 'Lütfen giriş yapmadan önce e-posta adresinizi doğrulayın. Gelen kutunuzu kontrol edin.';
-                     } else {
-                         errorMsg.textContent = 'E-posta veya şifre hatalı!';
-                     }
+                     errorMsg.textContent = translateAuthError(error.message);
                      errorMsg.style.color = 'var(--danger)';
                  } else {
                      errorMsg.textContent = 'Giriş başarılı! Yönlendiriliyorsunuz...';
@@ -237,5 +232,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
+    }
+
+    // --- Translation Helper ---
+    function translateAuthError(msg) {
+        if (!msg) return 'Bir hata oluştu.';
+        const txt = msg.toLowerCase();
+        
+        if (txt.includes('invalid login credentials')) return 'E-posta veya şifre hatalı.';
+        if (txt.includes('email not confirmed')) return 'Lütfen giriş yapmadan önce e-posta adresinize gönderilen linke tıklayarak hesabınızı doğrulayın.';
+        if (txt.includes('user already registered')) return 'Bu e-posta adresiyle zaten kayıtlı bir hesap var.';
+        if (txt.includes('password should be at least')) return 'Şifreniz en az 6 karakter olmalıdır.';
+        if (txt.includes('rate limit') || txt.includes('too many requests')) return 'Güvenlik sebebiyle çok fazla deneme yaptınız. Lütfen biraz bekleyip tekrar deneyin.';
+        if (txt.includes('network') || txt.includes('fetch')) return 'İnternet bağlantınızı kontrol edin.';
+        if (txt.includes('weak password')) return 'Şifreniz çok zayıf, lütfen daha zor bir şifre seçin.';
+        
+        return msg; // Fallback to raw message if translation is missing
     }
 });

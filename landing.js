@@ -178,8 +178,16 @@ document.addEventListener('DOMContentLoaded', () => {
         _supabase.auth.onAuthStateChange((event, session) => {
             userSession = session;
             if (session) {
-                // User is authenticated. Instantly redirect from landing page
-                window.location.href = '/editor.html';
+                // User is logged in. Do NOT auto redirect. Show "Go to Editor" and "Logout"
+                authBtnsContainer.innerHTML = `
+                    <a href="/editor.html" class="primary-btn" style="text-decoration:none; display:inline-block; text-align:center;">Editöre Git</a>
+                    <button id="landing-logout-btn" class="primary-btn outline">Çıkış Yap</button>
+                `;
+                
+                document.getElementById('landing-logout-btn').addEventListener('click', async () => {
+                    await _supabase.auth.signOut();
+                    window.location.reload();
+                });
             }
         });
     }
