@@ -71,6 +71,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const profileImageUpload = document.getElementById('profile-image-upload');
     const removeImageBtn = document.getElementById('remove-image-btn');
 
+    // Pro Elements
+    const upgradeProBtn = document.getElementById('upgrade-pro-btn');
+    const proBadge = document.getElementById('pro-badge');
+    const previewWatermark = document.getElementById('preview-watermark');
+
     // --- State ---
     let appData = {
         profileUsername: 'benim-ismim',
@@ -91,7 +96,8 @@ document.addEventListener('DOMContentLoaded', () => {
             github: '',
             youtube: ''
         },
-        views: 0
+        views: 0,
+        isPro: false // NEW: Pro status
     };
 
     // Global State
@@ -291,7 +297,15 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.theme-preset-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const target = e.currentTarget;
-                appData.pageTheme = target.getAttribute('data-theme');
+                const selectedTheme = target.getAttribute('data-theme');
+                
+                // Pro Lock Check
+                if (target.classList.contains('pro-theme') && !appData.isPro) {
+                    alert("Bu özelliği kullanmak için Pro versiyona geçmelisiniz!");
+                    return;
+                }
+
+                appData.pageTheme = selectedTheme;
                 updatePreviewStyles();
                 autoSave();
             });
@@ -316,6 +330,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const title = newLinkTitleInput.value.trim() || 'Yeni Link';
                 const url = newLinkUrlInput.value.trim() || 'https://';
                 const type = newLinkTypeInput.value;
+
+                // Pro Validation
+                if ((type === 'tiktok' || type === 'newsletter') && !appData.isPro) {
+                    alert('Bu özellikler Pro kullanıcılarına özeldir!');
+                    return;
+                }
 
                 const newLink = { id: generateId(), title, url, clicks: 0, type };
                 appData.links.push(newLink);
@@ -457,6 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (userSession && _supabase) {
                     // Sign out
                     await _supabase.auth.signOut();
+                    window.location.reload();
                 } else {
                     // Open Login Modal
                     authModal.classList.add('active');
@@ -534,7 +555,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (data.session) {
                             errorMsg.textContent = 'Kayıt başarılı! Giriş yapılıyor...';
                             errorMsg.style.color = '#10b981';
-                            setTimeout(() => { authModal.classList.remove('active'); }, 1000);
+                            setTimeout(() => { window.location.reload(); }, 1000);
                         } else {
                             errorMsg.textContent = 'Kayıt başarılı! Lütfen giriş yapın.';
                             errorMsg.style.color = '#10b981'; // emerald green
@@ -554,7 +575,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else {
                         errorMsg.textContent = 'Giriş başarılı!';
                         errorMsg.style.color = '#10b981';
-                        setTimeout(() => { authModal.classList.remove('active'); }, 1000);
+                        setTimeout(() => { window.location.reload(); }, 1000);
                     }
                 }
             });
@@ -592,6 +613,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         <option value="button" ${type === 'button' ? 'selected' : ''}>🔗 Normal Buton</option>
                         <option value="youtube" ${type === 'youtube' ? 'selected' : ''}>▶️ YouTube Video (Gömülü)</option>
                         <option value="spotify" ${type === 'spotify' ? 'selected' : ''}>🎧 Spotify (Gömülü)</option>
+                        <option value="tiktok" ${type === 'tiktok' ? 'selected' : ''}>🎵 TikTok (PRO ✨)</option>
+                        <option value="newsletter" ${type === 'newsletter' ? 'selected' : ''}>✉️ Bülten (PRO ✨)</option>
                     </select>
                     <div class="link-analytics text-xs text-secondary" style="margin-top: 5px; font-size: 0.75rem;"><i class="fa-solid fa-hand-pointer"></i> ${clicks} Tıklanma</div>
                 </div>
@@ -734,6 +757,76 @@ document.addEventListener('DOMContentLoaded', () => {
                 iframe.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
                 previewLinksContainer.appendChild(iframe);
             }
+            else if (type === 'tiktok') {
+                let videoId = '';
+                try {
+                    const urlObj = new URL(targetUrl);
+                    if (urlObj.hostname.includes('tiktok.com')) {
+                        const paths = urlObj.pathname.split('/');
+                        videoId = paths[paths.length - 1]; // usually /@user/video/123456789
+                    }
+                } catch (e) {}
+
+                if (videoId) {
+                    const iframe = document.createElement('iframe');
+                    iframe.className = 'preview-embed-tiktok';
+                    iframe.src = `https://www.tiktok.com/embed/v2/${videoId}`;
+                    iframe.title = link.title || 'TikTok video';
+                    iframe.frameBorder = '0';
+                    iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
+                    iframe.allowFullscreen = true;
+                    // TikTok standard embed height is pretty tall
+                    iframe.style.width = '100%';
+                    iframe.style.height = '700px'; 
+                    iframe.style.borderRadius = 'var(--radius-md)';
+                    iframe.style.marginBottom = '1rem';
+                    previewLinksContainer.appendChild(iframe);
+                } else {
+                    const a = document.createElement('a');
+                    a.href = targetUrl;
+                    a.className = 'preview-link-btn';
+                    a.textContent = `[TikTok Hata] ${link.title}`;
+                    a.target = '_blank';
+                    previewLinksContainer.appendChild(a);
+                }
+            }
+            else if (type === 'newsletter') {
+                // A UI-only representation for MVP
+                const formBox = document.createElement('div');
+                formBox.className = 'preview-newsletter-box';
+                formBox.style.padding = '1.5rem';
+                formBox.style.borderRadius = 'var(--radius-md)';
+                formBox.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+                formBox.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+                formBox.style.marginBottom = '1rem';
+                formBox.style.textAlign = 'center';
+
+                formBox.innerHTML = `
+                    <h4 style="margin-bottom: 0.5rem; font-size: 1.1rem; color: #fff;">${sanitizeHTML(link.title) || 'Bültene Abone Ol'}</h4>
+                    <p style="font-size: 0.85rem; color: #a1a1aa; margin-bottom: 1rem;">En güncel haberleri almak için e-posta adresini bırak.</p>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="email" placeholder="ornek@email.com" style="flex: 1; padding: 0.6rem; border-radius: var(--radius-sm); border: none; outline: none; background: rgba(0,0,0,0.2); color: #fff;">
+                        <button class="primary-btn" style="padding: 0.6rem 1rem; border: none; border-radius: var(--radius-sm); font-weight: bold; cursor: pointer; background: var(--accent); color: white;">Abone Ol</button>
+                    </div>
+                `;
+                
+                // Block form submission in preview
+                const btn = formBox.querySelector('button');
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (document.body.classList.contains('view-mode')) {
+                        alert("Bülten aboneliği alındı! (Demo Özelliği)");
+                        if (_supabase && appData.profileUsername) {
+                            _supabase.rpc('increment_link_click', {
+                                p_username: appData.profileUsername,
+                                p_link_id: link.id
+                            }).catch(err => console.error(err));
+                        }
+                    }
+                });
+
+                previewLinksContainer.appendChild(formBox);
+            }
             else {
                 const a = document.createElement('a');
                 a.href = targetUrl;
@@ -813,6 +906,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        // Toggle Pro Banner
+        const proBanner = document.getElementById('pro-analytics-banner');
+        if (proBanner) {
+            proBanner.style.display = appData.isPro ? 'none' : 'block';
+        }
+
         // Show Modal
         analyticsModal.classList.add('active');
     }
@@ -874,7 +973,15 @@ document.addEventListener('DOMContentLoaded', () => {
             select.addEventListener('change', (e) => {
                 const id = e.target.getAttribute('data-id');
                 const link = appData.links.find(l => l.id === id);
-                if (link) link.type = e.target.value;
+                const newType = e.target.value;
+                
+                if ((newType === 'tiktok' || newType === 'newsletter') && !appData.isPro) {
+                    alert('Bu özellikler Pro kullanıcılarına özeldir!');
+                    e.target.value = link.type; // Revert strictly visually
+                    return;
+                }
+
+                if (link) link.type = newType;
                 updatePreview();
                 autoSave();
             });
@@ -935,7 +1042,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     accentColor: data.accent_color || '#3b82f6',
                     links: data.links || [],
                     socials: data.socials || {},
-                    views: data.views || 0
+                    views: data.views || 0,
+                    isPro: data.is_pro || false
                 };
 
                 updateEditorUI();
@@ -964,6 +1072,27 @@ document.addEventListener('DOMContentLoaded', () => {
             removeImageBtn.style.display = 'flex';
         } else {
             removeImageBtn.style.display = 'none';
+        }
+
+        // Pro UI Update
+        if (appData.isPro) {
+            if (upgradeProBtn) upgradeProBtn.style.display = 'none';
+            if (proBadge) proBadge.style.display = 'inline-block';
+            if (previewWatermark) previewWatermark.style.display = 'none';
+            
+            // Unlock pro themes in UI
+            document.querySelectorAll('.pro-theme i.fa-lock').forEach(icon => {
+                icon.className = 'fa-solid fa-crown'; // Change lock to crown for Pro users
+            });
+        } else {
+            // Only show UPGRADE button if the user is actually logged in, otherwise hide it to save space
+            if (userSession && upgradeProBtn) {
+                upgradeProBtn.style.display = 'inline-block';
+            } else if (upgradeProBtn) {
+                upgradeProBtn.style.display = 'none';
+            }
+            if (proBadge) proBadge.style.display = 'none';
+            if (previewWatermark) previewWatermark.style.display = 'block';
         }
 
         const totalViewsDisplay = document.getElementById('total-views-display');
@@ -1071,7 +1200,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 accentColor: data.accent_color || '#3b82f6',
                 links: data.links || [],
                 socials: data.socials || {},
-                views: data.views || 0
+                views: data.views || 0,
+                isPro: data.is_pro || false
             };
 
             // Render view with fetched db parameters
@@ -1088,6 +1218,11 @@ document.addEventListener('DOMContentLoaded', () => {
             document.documentElement.style.setProperty('--bg-main', appData.bgColor);
             document.documentElement.style.setProperty('--accent', appData.accentColor);
             document.body.style.backgroundColor = appData.bgColor;
+            
+            // Hide watermark for pro users in View Mode
+            if (appData.isPro && previewWatermark) {
+                previewWatermark.style.display = 'none';
+            }
 
         } catch (err) {
             console.error(err);

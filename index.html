@@ -26,6 +26,8 @@
                     <i class="fa-solid fa-link"></i> LinkInBio Studio
                 </div>
                 <div style="display: flex; gap: 0.75rem; align-items: center;">
+                    <button id="upgrade-pro-btn" class="sm-btn text-accent" style="display: none; font-weight: bold; border: 1px solid var(--accent); background: transparent;"><i class="fa-solid fa-crown"></i> Pro'ya Geç</button>
+                    <span id="pro-badge" style="display: none; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: white; padding: 0.2rem 0.5rem; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: bold;"><i class="fa-solid fa-crown"></i> PRO</span>
                     <button id="analytics-summary" title="İstatistikleri Gör" class="sm-btn"
                         style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--text-secondary); background: var(--bg-secondary); border: none; padding: 0.5rem 0.8rem; border-radius: var(--radius-sm); font-weight: 500; cursor: pointer; transition: all 0.2s;">
                         <i class="fa-solid fa-chart-simple"></i> <span id="total-views-display">0</span>
@@ -152,7 +154,7 @@
                             <!-- Preview links injected here via JS -->
                         </div>
 
-                        <div class="preview-footer">
+                        <div class="preview-footer" id="preview-watermark">
                             <p>Created with LinkInBio</p>
                         </div>
 
@@ -173,12 +175,12 @@
                         id="theme-selector-group">
                         <button class="sm-btn theme-preset-btn active" data-theme="default"
                             style="flex: 1; min-width: 45%;">Klasik</button>
-                        <button class="sm-btn theme-preset-btn" data-theme="glassmorphism"
-                            style="flex: 1; min-width: 45%;">Buzlu Cam</button>
-                        <button class="sm-btn theme-preset-btn" data-theme="animated-aurora"
-                            style="flex: 1; min-width: 45%;">Aurora</button>
                         <button class="sm-btn theme-preset-btn" data-theme="minimal-dark"
                             style="flex: 1; min-width: 45%;">Minimal</button>
+                        <button class="sm-btn theme-preset-btn pro-theme" data-theme="glassmorphism"
+                            style="flex: 1; min-width: 45%; position: relative;">Buzlu Cam <i class="fa-solid fa-lock" style="font-size: 0.7rem; margin-left: 4px; color: #fbbf24;"></i></button>
+                        <button class="sm-btn theme-preset-btn pro-theme" data-theme="animated-aurora"
+                            style="flex: 1; min-width: 45%; position: relative;">Aurora <i class="fa-solid fa-lock" style="font-size: 0.7rem; margin-left: 4px; color: #fbbf24;"></i></button>
                     </div>
                 </div>
 
@@ -226,6 +228,8 @@
                     <option value="button">Standart Buton</option>
                     <option value="youtube">YouTube Embed (Video)</option>
                     <option value="spotify">Spotify Embed (Müzik)</option>
+                    <option value="tiktok" class="pro-option">TikTok Embed (PRO ✨)</option>
+                    <option value="newsletter" class="pro-option">Bülten Aboneliği (PRO ✨)</option>
                 </select>
             </div>
 
@@ -332,6 +336,12 @@
                 style="max-height: 250px; overflow-y: auto; text-align: left;">
                 <!-- Link stats items injected here -->
                 <p class="text-secondary" style="text-align: center; margin-top: 1rem;">Henüz tıklanan link yok.</p>
+            </div>
+
+            <!-- PRO ANALYTICS BANNER -->
+            <div id="pro-analytics-banner" style="margin-top: 1.5rem; padding: 1rem; border-radius: var(--radius-md); background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.05)); border: 1px dashed #f59e0b; text-align: center;">
+                <h4 style="color: #fbbf24; margin-bottom: 0.5rem;"><i class="fa-solid fa-crown"></i> Gelişmiş İstatistikler</h4>
+                <p style="font-size: 0.85rem; color: var(--text-secondary);">Ziyaretçilerin konumlarını, cihazlarını ve trafik kaynaklarını (Referer) görmek için Pro'ya geçin.</p>
             </div>
         </div>
     </div>
