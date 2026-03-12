@@ -140,11 +140,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         return;
                     }
                     
-                    // Update UI for logged-out user (Fallback for view mode)
-                    if (authTriggerBtn) {
-                        authTriggerBtn.style.display = 'none'; // Hide auth button entirely in view mode
-                    }
-                    
                     // Load from LocalStorage if logged out (Demo mode / Pre-auth)
                     loadFromLocalStorage();
                 }
@@ -477,117 +472,16 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Auth Modal Events
-        let isLoginMode = true;
-
+        // --- Logout Event ---
         if (authTriggerBtn) {
             authTriggerBtn.addEventListener('click', async () => {
                 if (userSession && _supabase) {
-                    // Sign out
                     await _supabase.auth.signOut();
-                    window.location.reload();
-                } else {
-                    // Open Login Modal
-                    authModal.classList.add('active');
-                    document.getElementById('auth-error-msg').textContent = '';
+                    window.location.href = '/'; // Go back to landing
                 }
             });
         }
 
-        if (closeAuthBtn) {
-            closeAuthBtn.addEventListener('click', () => {
-                authModal.classList.remove('active');
-            });
-        }
-
-        authModal.addEventListener('click', (e) => {
-            if (e.target === authModal) {
-                authModal.classList.remove('active');
-            }
-        });
-
-        if (authSwitchBtn) {
-            authSwitchBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                isLoginMode = !isLoginMode;
-                const errorMsg = document.getElementById('auth-error-msg');
-                if (errorMsg) errorMsg.textContent = '';
-
-                if (isLoginMode) {
-                    authTitle.textContent = 'Giriş Yap';
-                    authNameGroup.style.display = 'none';
-                    authActionBtn.textContent = 'Giriş Yap';
-                    authSwitchText.textContent = 'Hesabın yok mu?';
-                    authSwitchBtn.textContent = 'Kayıt Ol';
-                } else {
-                    authTitle.textContent = 'Kayıt Ol';
-                    authNameGroup.style.display = 'block'; // Show name field for registration
-                    authActionBtn.textContent = 'Kayıt Ol';
-                    authSwitchText.textContent = 'Zaten hesabın var mı?';
-                    authSwitchBtn.textContent = 'Giriş Yap';
-                }
-            });
-        }
-
-        // Supabase Login/Register Submission
-        if (authActionBtn && _supabase) {
-            authActionBtn.addEventListener('click', async () => {
-                const email = document.getElementById('auth-email-input').value;
-                const password = document.getElementById('auth-password-input').value;
-                const name = document.getElementById('auth-name-input').value;
-                const errorMsg = document.getElementById('auth-error-msg');
-
-                if (!email || !password || (!isLoginMode && !name)) {
-                    errorMsg.textContent = 'Lütfen tüm alanları doldurun!';
-                    errorMsg.style.color = 'var(--danger)';
-                    return;
-                }
-
-                errorMsg.textContent = 'İşleminiz yapılıyor, lütfen bekleyin...';
-                errorMsg.style.color = 'var(--text-secondary)';
-
-                if (!isLoginMode) {
-                    // Registration Flow
-                    const { data, error } = await _supabase.auth.signUp({
-                        email: email,
-                        password: password,
-                        options: {
-                            data: { full_name: name, }
-                        }
-                    });
-
-                    if (error) {
-                        errorMsg.textContent = error.message.includes('weak_password') ? 'Şifre en az 6 karakter olmalıdır.' : error.message;
-                        errorMsg.style.color = 'var(--danger)';
-                    } else {
-                        if (data.session) {
-                            errorMsg.textContent = 'Kayıt başarılı! Giriş yapılıyor...';
-                            errorMsg.style.color = '#10b981';
-                            setTimeout(() => { window.location.reload(); }, 1000);
-                        } else {
-                            errorMsg.textContent = 'Kayıt başarılı! Lütfen giriş yapın.';
-                            errorMsg.style.color = '#10b981'; // emerald green
-                            setTimeout(() => { authSwitchBtn.click(); }, 1500); // switch to login mode automatically
-                        }
-                    }
-                } else {
-                    // Login Flow
-                    const { data, error } = await _supabase.auth.signInWithPassword({
-                        email: email,
-                        password: password,
-                    });
-
-                    if (error) {
-                        errorMsg.textContent = 'Hatalı e-posta veya şifre!';
-                        errorMsg.style.color = 'var(--danger)';
-                    } else {
-                        errorMsg.textContent = 'Giriş başarılı!';
-                        errorMsg.style.color = '#10b981';
-                        setTimeout(() => { window.location.reload(); }, 1000);
-                    }
-                }
-            });
-        }
     }
 
     function renderEditorLinks() {

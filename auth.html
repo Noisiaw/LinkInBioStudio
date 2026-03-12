@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap - LinkInBio Studio</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .auth-wrapper {
+            width: 100%;
+            max-width: 450px;
+            padding: 2rem;
+        }
+
+        .auth-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .auth-logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .auth-logo i {
+            color: var(--accent);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent);
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .auth-switch {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .auth-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .auth-link:hover {
+            text-decoration: underline;
+        }
+
+        .status-msg {
+            margin-top: 1rem;
+            min-height: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-wrapper">
+        <div class="auth-logo">
+            <i class="fa-solid fa-link"></i> LinkInBio
+        </div>
+        
+        <div class="auth-card">
+            <h1 id="auth-title">Giriş Yap</h1>
+
+            <div class="form-group" id="auth-name-group" style="display: none;">
+                <label for="auth-name-input">İsim Soyisim</label>
+                <input type="text" id="auth-name-input" class="form-input" placeholder="Adınız Soyadınız">
+            </div>
+
+            <div class="form-group">
+                <label for="auth-email-input">E-posta</label>
+                <input type="email" id="auth-email-input" class="form-input" placeholder="ornek@mail.com">
+            </div>
+
+            <div class="form-group">
+                <label for="auth-password-input">Şifre</label>
+                <input type="password" id="auth-password-input" class="form-input" placeholder="••••••••">
+            </div>
+
+            <button id="auth-action-btn" class="primary-btn auth-btn">Giriş Yap</button>
+
+            <div id="auth-error-msg" class="status-msg text-danger"></div>
+
+            <div class="auth-switch">
+                <span id="auth-switch-text">Hesabın yok mu?</span>
+                <a href="#" id="auth-switch-btn" class="auth-link">Kayıt Ol</a>
+            </div>
+            
+            <div style="margin-top: 1rem;">
+                <a href="/" style="font-size: 0.8rem; color: var(--text-secondary); text-decoration: none;"><i class="fa-solid fa-arrow-left"></i> Ana Sayfaya Dön</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase SDK & Auth Script -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth.js"></script>
+</body>
+</html>

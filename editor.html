@@ -32,8 +32,8 @@
                         style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--text-secondary); background: var(--bg-secondary); border: none; padding: 0.5rem 0.8rem; border-radius: var(--radius-sm); font-weight: 500; cursor: pointer; transition: all 0.2s;">
                         <i class="fa-solid fa-chart-simple"></i> <span id="total-views-display">0</span>
                     </button>
-                    <button id="auth-trigger-btn" class="sm-btn" style="background-color: var(--accent); color: white;">
-                        <i class="fa-solid fa-user"></i> <span id="auth-trigger-text">Giriş Yap</span>
+                    <button id="auth-trigger-btn" class="sm-btn" style="background-color: var(--bg-secondary); color: var(--text-secondary);">
+                        <i class="fa-solid fa-right-from-bracket"></i> <span id="auth-trigger-text">Çıkış Yap</span>
                     </button>
                     <button id="theme-toggle" class="icon-btn" title="Toggle Theme">
                         <i class="fa-solid fa-moon"></i>
@@ -346,39 +346,6 @@
         </div>
     </div>
 
-    <!-- NEW: Auth Modal -->
-    <div id="auth-modal" class="modal-overlay">
-        <div class="modal-content card" style="max-width: 400px;">
-            <button id="close-auth-btn" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
-            <h2 id="auth-title">Giriş Yap</h2>
-
-            <div class="form-group" id="auth-name-group" style="display: none; text-align: left;">
-                <label for="auth-name-input">İsim Soyisim</label>
-                <input type="text" id="auth-name-input" placeholder="Adınız Soyadınız">
-            </div>
-
-            <div class="form-group" style="text-align: left;">
-                <label for="auth-email-input">E-posta</label>
-                <input type="email" id="auth-email-input" placeholder="ornek@mail.com"
-                    style="width: 100%; border-radius: var(--radius-md); border: 1px solid var(--border); padding: 0.75rem 1rem; background-color: var(--bg-main); color: var(--text-primary); outline: none;">
-            </div>
-
-            <div class="form-group" style="text-align: left;">
-                <label for="auth-password-input">Şifre</label>
-                <input type="password" id="auth-password-input" placeholder="••••••••"
-                    style="width: 100%; border-radius: var(--radius-md); border: 1px solid var(--border); padding: 0.75rem 1rem; background-color: var(--bg-main); color: var(--text-primary); outline: none;">
-            </div>
-
-            <button id="auth-action-btn" class="primary-btn" style="margin-top: 1rem;">Giriş Yap</button>
-
-            <div id="auth-error-msg" class="status-msg text-danger" style="margin-top: 0.5rem; height: 1.5rem;"></div>
-
-            <p class="text-xs text-secondary" style="margin-top: 1rem;">
-                <span id="auth-switch-text">Hesabın yok mu?</span>
-                <a href="#" id="auth-switch-btn" class="text-accent"
-                    style="text-decoration:none; font-weight:bold;">Kayıt Ol</a>
-            </p>
-        </div>
     </div>
 
     <!-- Supabase SDK -->

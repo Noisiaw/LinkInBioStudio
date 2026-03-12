@@ -191,125 +191,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Auth Modal Logic ---
-    const authModal = document.getElementById('auth-modal');
-    const closeAuthBtn = document.getElementById('close-auth-btn');
-    const authTitle = document.getElementById('auth-title');
-    const authNameGroup = document.getElementById('auth-name-group');
-    const authActionBtn = document.getElementById('auth-action-btn');
-    const authSwitchText = document.getElementById('auth-switch-text');
-    const authSwitchBtn = document.getElementById('auth-switch-btn');
-    
-    let isLoginMode = true;
-
-    function bindModalTriggers() {
-        document.querySelectorAll('.login-trigger').forEach(btn => {
-            btn.addEventListener('click', () => {
-                isLoginMode = true;
-                updateAuthModalText(isLoginMode);
-                authModal.classList.add('active');
-            });
-        });
-
-        document.querySelectorAll('.register-trigger').forEach(btn => {
-            btn.addEventListener('click', () => {
-                isLoginMode = false;
-                updateAuthModalText(isLoginMode);
-                
-                // Pre-fill username from landing page hero input if available
-                const val = document.getElementById('landing-username').value;
-                if(val && !isLoginMode) {
-                   // Optional: Could store username locally to apply after registration
-                }
-                
-                authModal.classList.add('active');
-            });
+    // --- Hero CTA ---
+    const heroBtn = document.getElementById('hero-cta-btn');
+    if (heroBtn) {
+        heroBtn.addEventListener('click', () => {
+            const val = document.getElementById('landing-username').value.trim();
+            if (val) {
+                // Pass username as query param so auth can optionally pick it up later
+                window.location.href = `/auth.html?mode=register&u=${encodeURIComponent(val)}`;
+            } else {
+                window.location.href = `/auth.html?mode=register`;
+            }
         });
     }
 
-    // Bind triggers initially for hero CTA
-    bindModalTriggers();
-
-    closeAuthBtn.addEventListener('click', () => authModal.classList.remove('active'));
-    authModal.addEventListener('click', (e) => { if (e.target === authModal) authModal.classList.remove('active'); });
-
-    function updateAuthModalText(isLogin) {
-        if (isLogin) {
-            authTitle.textContent = translations[currentLang].auth_login_title;
-            authNameGroup.style.display = 'none';
-            authActionBtn.textContent = translations[currentLang].auth_login_btn;
-            authSwitchText.textContent = translations[currentLang].auth_no_account;
-            authSwitchBtn.textContent = translations[currentLang].auth_register_link;
-        } else {
-            authTitle.textContent = translations[currentLang].auth_reg_title;
-            authNameGroup.style.display = 'block';
-            authActionBtn.textContent = translations[currentLang].auth_reg_btn;
-            authSwitchText.textContent = translations[currentLang].auth_has_account;
-            authSwitchBtn.textContent = translations[currentLang].auth_login_link;
-        }
-    }
-
-    authSwitchBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        isLoginMode = !isLoginMode;
-        document.getElementById('auth-error-msg').textContent = '';
-        updateAuthModalText(isLoginMode);
-    });
-
-    // Supabase Auth Action
-    if (authActionBtn && _supabase) {
-        authActionBtn.addEventListener('click', async () => {
-             const email = document.getElementById('auth-email-input').value;
-             const password = document.getElementById('auth-password-input').value;
-             const name = document.getElementById('auth-name-input').value;
-             const errorMsg = document.getElementById('auth-error-msg');
-
-             if (!email || !password || (!isLoginMode && !name)) {
-                 errorMsg.textContent = 'Lütfen tüm alanları doldurun / Please fill all fields!';
-                 errorMsg.style.color = 'var(--danger)';
-                 return;
-             }
-
-             errorMsg.textContent = 'Bekleyin / Please wait...';
-             errorMsg.style.color = '#94a3b8';
-
-             if (!isLoginMode) {
-                 const { data, error } = await _supabase.auth.signUp({
-                     email: email,
-                     password: password,
-                     options: { data: { full_name: name } }
-                 });
-
-                 if (error) {
-                     errorMsg.textContent = error.message;
-                     errorMsg.style.color = 'var(--danger)';
-                 } else {
-                     if (data.session) {
-                         errorMsg.textContent = 'Başarılı / Success!';
-                         errorMsg.style.color = '#10b981';
-                         setTimeout(() => { window.location.href = 'editor.html'; }, 500); // Route directly to editor
-                     } else {
-                         errorMsg.textContent = 'Başarılı! Lütfen giriş yapın / Success! Please login.';
-                         errorMsg.style.color = '#10b981';
-                         setTimeout(() => { authSwitchBtn.click(); }, 1500); 
-                     }
-                 }
-             } else {
-                 const { data, error } = await _supabase.auth.signInWithPassword({
-                     email: email,
-                     password: password,
-                 });
-
-                 if (error) {
-                     errorMsg.textContent = 'Hatalı / Invalid credentials!';
-                     errorMsg.style.color = 'var(--danger)';
-                 } else {
-                     errorMsg.textContent = 'Giriş başarılı / Success!';
-                     errorMsg.style.color = '#10b981';
-                     setTimeout(() => { window.location.href = 'editor.html'; }, 500); // Route directly to editor
-                 }
-             }
-        });
-    }
+});
 
 });

@@ -1,0 +1,18 @@
+{
+  "rewrites": [
+    { "source": "/auth", "destination": "/auth.html" },
+    { "source": "/editor", "destination": "/editor.html" },
+    { "source": "/preview", "destination": "/preview.html" },
+    { 
+      "source": "/:user", 
+      "destination": "/preview.html?u=:user",
+      "has": [
+        {
+          "type": "query",
+          "key": "u",
+          "value": "(?!.*)"
+        }
+      ]
+    }
+  ]
+}
