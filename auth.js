@@ -28,6 +28,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const authPasswordGroup = document.getElementById('auth-password-group');
     const forgotPasswordLink = document.getElementById('forgot-password-link');
     const errorMsg = document.getElementById('auth-error-msg');
+    const authFormContainer = document.getElementById('auth-form-container');
+    const authSuccessScreen = document.getElementById('auth-success-screen');
+    const authSuccessMsg = document.getElementById('auth-success-msg');
 
     // Modes: 'login', 'register', 'reset', 'update_password'
     let currentMode = 'login';
@@ -161,8 +164,11 @@ document.addEventListener('DOMContentLoaded', () => {
                      errorMsg.textContent = error.message;
                      errorMsg.style.color = 'var(--danger)';
                  } else {
-                     errorMsg.textContent = 'Şifre sıfırlama bağlantısı e-posta adresinize gönderildi! Lütfen gelen kutunuzu kontrol edin.';
-                     errorMsg.style.color = '#10b981';
+                     // Show Success Screen
+                     authFormContainer.style.display = 'none';
+                     authSuccessScreen.style.display = 'block';
+                     authSuccessScreen.querySelector('h2').textContent = 'Bağlantı Gönderildi';
+                     authSuccessMsg.textContent = 'Şifre sıfırlama bağlantısı e-posta adresinize gönderildi! Lütfen gelen kutunuzu kontrol edip bağlantıya tıklayın.';
                  }
                  return;
              }
@@ -193,10 +199,11 @@ document.addEventListener('DOMContentLoaded', () => {
                          errorMsg.style.color = '#10b981';
                          setTimeout(() => { window.location.href = '/editor.html'; }, 800);
                      } else {
-                         // Email confirmation required setup
-                         errorMsg.textContent = 'Kayıt başarılı! Lütfen önce size gönderilen onay e-postasındaki linke tıklayın.';
-                         errorMsg.style.color = '#10b981'; // Green success message
-                         setTimeout(() => { authSwitchBtn.click(); }, 3000); 
+                         // Email confirmation required setup - Show Success Screen
+                         authFormContainer.style.display = 'none';
+                         authSuccessScreen.style.display = 'block';
+                         authSuccessScreen.querySelector('h2').textContent = 'E-postanızı Kontrol Edin';
+                         authSuccessMsg.textContent = 'Hesabınızı başarıyla oluşturduk! Giriş yapabilmek için lütfen e-posta adresinize gönderdiğimiz onay bağlantısına tıklayın.';
                      }
                  }
              } else if (currentMode === 'login') {
