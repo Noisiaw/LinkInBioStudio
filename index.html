@@ -1,389 +1,186 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LinkInBio - Digital Business Card Generator</title>
-    <!-- Google Fonts: Inter and Outfit -->
+    <title>LinkInBio - Your Digital World in One Link</title>
+    
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700&display=swap"
-        rel="stylesheet">
-    <!-- Font Awesome for Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    
+    <!-- Shared Styles -->
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="landing.css">
 </head>
-
 <body>
-    <div class="app-container">
 
-        <!-- Editor Section (Left) -->
-        <section class="editor-section">
-            <header class="editor-header">
-                <div class="logo">
-                    <i class="fa-solid fa-link"></i> LinkInBio Studio
-                </div>
-                <div style="display: flex; gap: 0.75rem; align-items: center;">
-                    <button id="upgrade-pro-btn" class="sm-btn text-accent" style="display: none; font-weight: bold; border: 1px solid var(--accent); background: transparent;"><i class="fa-solid fa-crown"></i> Pro'ya Geç</button>
-                    <span id="pro-badge" style="display: none; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: white; padding: 0.2rem 0.5rem; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: bold;"><i class="fa-solid fa-crown"></i> PRO</span>
-                    <button id="analytics-summary" title="İstatistikleri Gör" class="sm-btn"
-                        style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--text-secondary); background: var(--bg-secondary); border: none; padding: 0.5rem 0.8rem; border-radius: var(--radius-sm); font-weight: 500; cursor: pointer; transition: all 0.2s;">
-                        <i class="fa-solid fa-chart-simple"></i> <span id="total-views-display">0</span>
-                    </button>
-                    <button id="auth-trigger-btn" class="sm-btn" style="background-color: var(--accent); color: white;">
-                        <i class="fa-solid fa-user"></i> <span id="auth-trigger-text">Giriş Yap</span>
-                    </button>
-                    <button id="theme-toggle" class="icon-btn" title="Toggle Theme">
-                        <i class="fa-solid fa-moon"></i>
-                    </button>
-                </div>
-            </header>
+    <!-- Dynamic Background Elements -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
 
-            <div class="editor-content">
-                <div class="card">
-                    <h2>Profil Bilgileri</h2>
-
-                    <!-- NEW: Username / Custom Link -->
-                    <div class="form-group url-claim-group">
-                        <label for="profile-username">Kendi Linkiniz</label>
-                        <div class="link-display-box">
-                            <i class="fa-solid fa-link text-accent"></i>
-                            <span id="url-prefix-display">linkinbiostudio.com/</span><span id="url-username-preview"
-                                class="text-accent font-bold">benim-ismim</span>
-                        </div>
-                        <input type="text" id="profile-username" value="benim-ismim"
-                            placeholder="İstediğiniz kullanıcı adı (Örn: ahmet-yilmaz)" style="margin-top: 0.5rem;">
-                    </div>
-
-
-
-                    <div class="form-group">
-                        <label for="profile-name">İsim</label>
-                        <input type="text" id="profile-name" value="Hoşgeldin 👋" placeholder="Örn: Ahmet Yılmaz">
-                    </div>
-                    <div class="form-group">
-                        <label for="profile-bio">Biyografi</label>
-                        <textarea id="profile-bio" rows="2"
-                            placeholder="Örn: Dijital İçerik Üreticisi">Bu benim yeni dijital kartvizitim!</textarea>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h2>Sosyal Medya İkonları</h2>
-                    <p class="text-xs text-secondary" style="margin-bottom:1rem;">Profilinde görünecek olan iletişim
-                        ikonlarını yönet.</p>
-                    <button id="manage-socials-btn" class="primary-btn"
-                        style="width: 100%; border: 1px solid var(--border); background-color: var(--bg-secondary); color: var(--text-primary);"><i
-                            class="fa-solid fa-icons text-accent"></i> Hesaplarımı Yönet</button>
-                </div>
-
-                <div class="card">
-                    <div class="flex-between">
-                        <h2>Bağlantılar</h2>
-                        <div style="display: flex; gap: 0.5rem;">
-                            <button id="add-header-btn" class="sm-btn"><i class="fa-solid fa-heading"></i> Başlık
-                                Ekle</button>
-                            <button id="add-link-btn" class="sm-btn"><i class="fa-solid fa-plus"></i> Yeni Link
-                                Ekle</button>
-                        </div>
-                    </div>
-
-                    <div id="links-container">
-                        <!-- Link items will be injected here via JS -->
-                    </div>
-                </div>
-
-                <!-- Theme Colors moved to Preview Section -->
+    <!-- Navigation -->
+    <nav class="landing-nav">
+        <div class="nav-container">
+            <div class="logo landing-logo">
+                <i class="fa-solid fa-link text-accent" style="margin-right: 8px;"></i> LinkInBio Studio
             </div>
-
-            <div class="editor-footer">
-                <div class="footer-buttons">
-                    <button id="export-btn" class="primary-btn"><i class="fa-solid fa-download"></i> Save</button>
-                    <button id="share-btn" class="primary-btn share-btn-style"><i class="fa-solid fa-share-nodes"></i>
-                        Share</button>
+            
+            <div class="nav-actions">
+                <button class="lang-toggle sm-btn" id="lang-toggle-btn" title="Dili Değiştir / Change Language">
+                    <i class="fa-solid fa-globe"></i> <span id="current-lang">TR</span>
+                </button>
+                <div id="auth-buttons-container">
+                    <!-- Injected by landing.js based on auth state -->
+                    <button class="primary-btn login-trigger" data-i18n="nav_login">Giriş Yap</button>
+                    <button class="primary-btn outline register-trigger" data-i18n="nav_register">Kayıt Ol</button>
                 </div>
-                <div id="save-status" class="status-msg">Changes saved locally</div>
-            </div>
-        </section>
-
-        <!-- Preview Section (Center) -->
-        <section class="preview-section">
-
-
-            <div class="device-mockup">
-                <div class="device-notch"></div>
-                <div class="device-screen" id="preview-screen">
-                    <div class="preview-container">
-
-                        <div class="preview-header">
-                            <!-- Profile Image with Hover Upload -->
-                            <div class="profile-image-wrapper">
-                                <div class="profile-image">
-                                    <!-- Default SVG Avatar -->
-                                    <svg viewBox="0 0 24 24" fill="none" class="avatar-svg">
-                                        <circle cx="12" cy="8" r="4" fill="currentColor" />
-                                        <path d="M4 22C4 17.5817 7.58172 14 12 14C16.4183 14 20 17.5817 20 22"
-                                            stroke="currentColor" stroke-width="2" />
-                                    </svg>
-                                </div>
-
-                                <label for="profile-image-upload" class="profile-image-upload-label"
-                                    title="Fotoğraf Yükle">
-                                    <i class="fa-solid fa-camera"></i>
-                                </label>
-                                <input type="file" id="profile-image-upload" accept="image/png, image/jpeg, image/webp"
-                                    class="hidden-upload">
-
-                                <button id="remove-image-btn" class="remove-image-btn-floating text-danger"
-                                    title="Fotoğrafı Kaldır" style="display:none;">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                            </div>
-                            <h1 id="preview-name">Hoşgeldin 👋</h1>
-                            <p id="preview-bio">Bu benim yeni dijital kartvizitim!</p>
-
-                            <!-- Social Icons Container -->
-                            <div class="social-icons" id="preview-social-icons">
-                                <!-- Injected via JS -->
-                            </div>
-                        </div>
-
-                        <div class="preview-links" id="preview-links-container">
-                            <!-- Preview links injected here via JS -->
-                        </div>
-
-                        <div class="preview-footer" id="preview-watermark">
-                            <p>Created with LinkInBio</p>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Theme Section (Right) -->
-        <section class="theme-section">
-            <div class="card" style="margin-top: 1.5rem;">
-                <h2 style="font-size: 1.2rem; margin-bottom: 1rem;"><i class="fa-solid fa-palette text-accent"></i>
-                    Görünüm ve Tema</h2>
-
-                <div class="form-group" style="margin-bottom: 1.5rem;">
-                    <label style="font-size: 0.9rem;">Hazır Şablonlar</label>
-                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;"
-                        id="theme-selector-group">
-                        <button class="sm-btn theme-preset-btn active" data-theme="default"
-                            style="flex: 1; min-width: 45%;">Klasik</button>
-                        <button class="sm-btn theme-preset-btn" data-theme="minimal-dark"
-                            style="flex: 1; min-width: 45%;">Minimal</button>
-                        <button class="sm-btn theme-preset-btn pro-theme" data-theme="glassmorphism"
-                            style="flex: 1; min-width: 45%; position: relative;">Buzlu Cam <i class="fa-solid fa-lock" style="font-size: 0.7rem; margin-left: 4px; color: #fbbf24;"></i></button>
-                        <button class="sm-btn theme-preset-btn pro-theme" data-theme="animated-aurora"
-                            style="flex: 1; min-width: 45%; position: relative;">Aurora <i class="fa-solid fa-lock" style="font-size: 0.7rem; margin-left: 4px; color: #fbbf24;"></i></button>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label style="font-size: 0.9rem;">Özel Renkler</label>
-                    <div class="color-picker-group" id="color-picker-group-container"
-                        style="flex-direction: column; gap: 1rem; margin-top: 0.5rem;">
-                        <div class="color-item" style="width: 100%;">
-                            <input type="color" id="bg-color-picker" value="#0f172a"
-                                style="width: 100%; height: 40px; border-radius: var(--radius-sm); border: none; cursor: pointer;">
-                            <label style="margin-top: 0.5rem; display: block;">Arka Plan</label>
-                        </div>
-                        <div class="color-item" style="width: 100%;">
-                            <input type="color" id="accent-color-picker" value="#3b82f6"
-                                style="width: 100%; height: 40px; border-radius: var(--radius-sm); border: none; cursor: pointer;">
-                            <label style="margin-top: 0.5rem; display: block;">Vurgu (Butonlar)</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </div>
-
-    <!-- NEW: Add Link Modal -->
-    <div id="add-link-modal" class="modal-overlay">
-        <div class="modal-content card" style="max-width: 400px;">
-            <button id="close-add-link-btn" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
-            <h2 style="margin-bottom: 1.5rem;"><i class="fa-solid fa-link text-accent"></i> Yeni Link Ekle</h2>
-
-            <div class="form-group" style="text-align: left;">
-                <label for="new-link-title">Link Başlığı</label>
-                <input type="text" id="new-link-title" placeholder="Örn: Instagram, Web Sitem">
-            </div>
-
-            <div class="form-group" style="text-align: left;">
-                <label for="new-link-url">URL</label>
-                <input type="url" id="new-link-url" placeholder="https://..." value="https://">
-            </div>
-
-            <div class="form-group" style="text-align: left;">
-                <label for="new-link-type">Link Türü</label>
-                <select id="new-link-type"
-                    style="width: 100%; border-radius: var(--radius-md); border: 1px solid var(--border); padding: 0.75rem 1rem; background-color: var(--bg-main); color: var(--text-primary); outline: none;">
-                    <option value="button">Standart Buton</option>
-                    <option value="youtube">YouTube Embed (Video)</option>
-                    <option value="spotify">Spotify Embed (Müzik)</option>
-                    <option value="tiktok" class="pro-option">TikTok Embed (PRO ✨)</option>
-                    <option value="newsletter" class="pro-option">Bülten Aboneliği (PRO ✨)</option>
-                </select>
-            </div>
-
-            <button id="submit-new-link-btn" class="primary-btn" style="margin-top: 1rem; width: 100%;">Listeye
-                Ekle</button>
-        </div>
-    </div>
-
-    <!-- NEW: Add Header Modal -->
-    <div id="add-header-modal" class="modal-overlay">
-        <div class="modal-content card" style="max-width: 400px;">
-            <button id="close-add-header-btn" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
-            <h2 style="margin-bottom: 1.5rem;"><i class="fa-solid fa-heading text-accent"></i> Yeni Alt Başlık Ekle</h2>
-
-            <div class="form-group" style="text-align: left;">
-                <label for="new-header-title">Başlık Metni</label>
-                <input type="text" id="new-header-title" placeholder="Örn: Favori Linklerim">
-            </div>
-
-            <button id="submit-new-header-btn" class="primary-btn" style="margin-top: 1rem; width: 100%;">Listeye
-                Ekle</button>
-        </div>
-    </div>
-
-    <!-- NEW: Edit Socials Modal -->
-    <div id="edit-social-modal" class="modal-overlay">
-        <div class="modal-content card" style="max-width: 450px;">
-            <button id="close-social-btn" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
-            <h2 style="margin-bottom: 0.5rem;"><i class="fa-solid fa-icons text-accent"></i> Sosyal Medya</h2>
-
-            <p class="text-xs text-secondary" style="margin-bottom: 1.5rem;">Sadece kullanıcı adınızı girdiğiniz ikonlar
-                görünür. (Örn: instagram için sadece <b>kullaniciadi</b> yazın.)</p>
-
-            <div class="social-inputs-grid">
-                <div class="form-group" style="text-align: left;">
-                    <label><i class="fa-brands fa-instagram text-accent"></i> Instagram</label>
-                    <input type="text" id="social-instagram" class="social-input" data-platform="instagram"
-                        placeholder="kullaniciadi">
-                </div>
-                <div class="form-group" style="text-align: left;">
-                    <label><i class="fa-brands fa-x-twitter text-accent"></i> X (Twitter)</label>
-                    <input type="text" id="social-twitter" class="social-input" data-platform="twitter"
-                        placeholder="kullaniciadi">
-                </div>
-                <div class="form-group" style="text-align: left;">
-                    <label><i class="fa-brands fa-linkedin text-accent"></i> LinkedIn</label>
-                    <input type="text" id="social-linkedin" class="social-input" data-platform="linkedin"
-                        placeholder="kullaniciadi">
-                </div>
-                <div class="form-group" style="text-align: left;">
-                    <label><i class="fa-brands fa-github text-accent"></i> GitHub</label>
-                    <input type="text" id="social-github" class="social-input" data-platform="github"
-                        placeholder="kullaniciadi">
-                </div>
-                <div class="form-group" style="text-align: left;">
-                    <label><i class="fa-brands fa-youtube text-accent"></i> YouTube</label>
-                    <input type="text" id="social-youtube" class="social-input" data-platform="youtube"
-                        placeholder="kanaladi">
-                </div>
-            </div>
-
-            <button id="save-social-btn" class="primary-btn" style="margin-top: 1.5rem; width: 100%;">Kaydet ve
-                Kapat</button>
-        </div>
-    </div>
-
-    <!-- NEW: Share Modal -->
-    <div id="share-modal" class="modal-overlay">
-        <div class="modal-content card">
-            <button id="close-modal-btn" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
-            <h2>Linkin Hazır! 🚀</h2>
-            <p>Bu bağlantıyı takipçilerinle paylaş:</p>
-
-            <div class="share-link-box">
-                <span id="final-share-link">http://localhost:8080/?u=benim-ismim</span>
-                <button id="copy-link-btn" class="primary-btn copy-btn"><i class="fa-regular fa-copy"></i>
-                    Kopyala</button>
-            </div>
-            <div id="copy-status" class="status-msg text-accent">Bağlantı panoya kopyalandı!</div>
-        </div>
-    </div>
-
-    <!-- NEW: Analytics Modal -->
-    <div id="analytics-modal" class="modal-overlay">
-        <div class="modal-content card" style="max-width: 500px;">
-            <button id="close-analytics-btn" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
-            <h2 style="margin-bottom: 1.5rem;"><i class="fa-solid fa-chart-simple text-accent"></i> İstatistiklerim</h2>
-
-            <div class="stat-blocks">
-                <div class="stat-box">
-                    <p class="stat-label">Toplam Görüntülenme</p>
-                    <h3 class="stat-value" id="modal-total-views">0</h3>
-                </div>
-                <div class="stat-box">
-                    <p class="stat-label">Toplam Link Tıklanması</p>
-                    <h3 class="stat-value" id="modal-total-clicks">0</h3>
-                </div>
-            </div>
-
-            <h3
-                style="margin-top: 2rem; margin-bottom: 1rem; font-size: 1.1rem; text-align: left; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                Link Dağılımı</h3>
-            <div class="link-stats-list" id="link-stats-list"
-                style="max-height: 250px; overflow-y: auto; text-align: left;">
-                <!-- Link stats items injected here -->
-                <p class="text-secondary" style="text-align: center; margin-top: 1rem;">Henüz tıklanan link yok.</p>
-            </div>
-
-            <!-- PRO ANALYTICS BANNER -->
-            <div id="pro-analytics-banner" style="margin-top: 1.5rem; padding: 1rem; border-radius: var(--radius-md); background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.05)); border: 1px dashed #f59e0b; text-align: center;">
-                <h4 style="color: #fbbf24; margin-bottom: 0.5rem;"><i class="fa-solid fa-crown"></i> Gelişmiş İstatistikler</h4>
-                <p style="font-size: 0.85rem; color: var(--text-secondary);">Ziyaretçilerin konumlarını, cihazlarını ve trafik kaynaklarını (Referer) görmek için Pro'ya geçin.</p>
             </div>
         </div>
-    </div>
+    </nav>
 
-    <!-- NEW: Auth Modal -->
+    <!-- Hero Section -->
+    <header class="hero" id="home">
+        <div class="hero-content">
+            <span class="hero-badge" data-i18n="hero_badge"><i class="fa-solid fa-sparkles text-accent"></i> Yeni Özellikler Yayında</span>
+            <h1 class="hero-title">
+                <span data-i18n="hero_title_1">Tüm Dünyanızı</span> <br>
+                <span class="gradient-text" data-i18n="hero_title_2">Tek Bir Linkte</span> <br>
+                <span data-i18n="hero_title_3">Birleştirin.</span>
+            </h1>
+            <p class="hero-subtitle" data-i18n="hero_subtitle">Sosyal medya profillerinizi, videolarınızı, projelerinizi ve bültenlerinizi çarpıcı bir tasarımla tek bir bio linkinde toplayın.</p>
+            
+            <div class="hero-cta-group">
+                <div class="url-claim-box">
+                    <span class="prefix">linkinbiostudio.com/</span>
+                    <input type="text" id="landing-username" placeholder="kullaniciadiniz" data-i18n-prop="placeholder" data-i18n="hero_input_placeholder">
+                </div>
+                <button class="primary-btn lg-btn register-trigger" data-i18n="hero_cta">Linkimi Oluştur</button>
+            </div>
+            <p class="text-xs text-secondary mt-2" data-i18n="hero_sub_cta">Kredi kartı gerekmez. Sonsuza dek ücretsiz başlayın.</p>
+        </div>
+        
+        <div class="hero-mockup">
+            <div class="glass-mockup">
+                <!-- Mini visual of the link tree app -->
+                <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="LinkInBio Preview" style="width: 100%; border-radius: var(--radius-md); opacity: 0.8; object-fit: cover; height: 100%;">
+            </div>
+        </div>
+    </header>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2 class="section-title text-center" data-i18n="feat_title">Neden Bizi Seçmelisiniz?</h2>
+        <div class="feature-grid">
+            
+            <div class="feature-card">
+                <div class="feat-icon"><i class="fa-solid fa-palette"></i></div>
+                <h3 data-i18n="feat_1_title">Göz Alıcı Temalar</h3>
+                <p data-i18n="feat_1_desc">Klasik, Aurora, veya Buzlu Cam... Tarzınızı yansıtan profesyonel şablonları saniyeler içinde uygulayın.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feat-icon"><i class="fa-solid fa-chart-line"></i></div>
+                <h3 data-i18n="feat_2_title">Gelişmiş İstatistikler</h3>
+                <p data-i18n="feat_2_desc">Hangi linkiniz daha çok tıklanıyor? Ziyaretçileriniz nereden geliyor? Tüm veriler elinizin altında.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feat-icon"><i class="fa-brands fa-tiktok"></i></div>
+                <h3 data-i18n="feat_3_title">Medya Embedleri</h3>
+                <p data-i18n="feat_3_desc">Sadece link değil; YouTube videolarını, Spotify müziklerini ve TikTok gönderilerini doğrudan profilinize gömün.</p>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <h2 class="section-title text-center" data-i18n="price_title">Basit ve Net Fiyatlandırma</h2>
+        
+        <div class="pricing-cards">
+            <!-- Standard Plan -->
+            <div class="price-card">
+                <h3 data-i18n="plan_free_name">Standart</h3>
+                <div class="price">
+                    <span class="amount">₺0</span>
+                    <span class="period" data-i18n="price_period">/ay</span>
+                </div>
+                <p class="plan-desc" data-i18n="plan_free_desc">Temel ihtiyaçlar için harika bir başlangıç.</p>
+                <ul class="plan-features">
+                    <li><i class="fa-solid fa-check"></i> <span data-i18n="pf_unlimited">Sınırsız Link Ekleme</span></li>
+                    <li><i class="fa-solid fa-check"></i> <span data-i18n="pf_basic_stats">Temel İstatistikler (Tıklama)</span></li>
+                    <li><i class="fa-solid fa-check"></i> <span data-i18n="pf_standard_themes">Standart Temalar</span></li>
+                    <li class="disabled"><i class="fa-solid fa-xmark"></i> <span data-i18n="pf_pro_themes">Premium Temalar (Aurora, Glass)</span></li>
+                    <li class="disabled"><i class="fa-solid fa-xmark"></i> <span data-i18n="pf_media">TikTok ve Bülten Özellikleri</span></li>
+                </ul>
+                <button class="primary-btn outline w-100 register-trigger" data-i18n="btn_start_free">Ücretsiz Başla</button>
+            </div>
+            
+            <!-- Pro Plan -->
+            <div class="price-card pro">
+                <div class="pro-badge"><i class="fa-solid fa-crown"></i> PRO</div>
+                <h3 data-i18n="plan_pro_name">Premium</h3>
+                <div class="price">
+                    <span class="amount">₺29</span>
+                    <span class="period" data-i18n="price_period">/ay</span>
+                </div>
+                <p class="plan-desc" data-i18n="plan_pro_desc">İşini ve markasını büyütmek isteyenler için.</p>
+                <ul class="plan-features">
+                    <li><i class="fa-solid fa-check"></i> <span data-i18n="pf_unlimited">Sınırsız Link Ekleme</span></li>
+                    <li><i class="fa-solid fa-check"></i> <span data-i18n="pf_adv_stats">Gelişmiş İstatistik Paneli</span></li>
+                    <li><i class="fa-solid fa-check"></i> <span data-i18n="pf_pro_themes_check">Premium Temalar (Aurora, Glass)</span></li>
+                    <li><i class="fa-solid fa-check"></i> <span data-i18n="pf_media_check">TikTok ve Bülten Özellikleri</span></li>
+                    <li><i class="fa-solid fa-check"></i> <span data-i18n="pf_no_ads">LinkInBio Reklamını Kaldırma</span></li>
+                </ul>
+                <button class="primary-btn w-100 register-trigger" data-i18n="btn_start_pro">Pro'ya Geç</button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="landing-footer">
+        <p>© 2026 LinkInBio Studio. <span data-i18n="footer_rights">Tüm Hakları Saklıdır.</span></p>
+    </footer>
+
+    <!-- Auth Modal (Reused from editor, styled for landing) -->
     <div id="auth-modal" class="modal-overlay">
-        <div class="modal-content card" style="max-width: 400px;">
+        <div class="modal-content card" style="max-width: 400px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-main);">
             <button id="close-auth-btn" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
-            <h2 id="auth-title">Giriş Yap</h2>
+            <h2 id="auth-title" data-i18n="auth_login_title">Giriş Yap</h2>
 
             <div class="form-group" id="auth-name-group" style="display: none; text-align: left;">
-                <label for="auth-name-input">İsim Soyisim</label>
+                <label for="auth-name-input" data-i18n="auth_name_label">İsim Soyisim</label>
                 <input type="text" id="auth-name-input" placeholder="Adınız Soyadınız">
             </div>
 
             <div class="form-group" style="text-align: left;">
-                <label for="auth-email-input">E-posta</label>
-                <input type="email" id="auth-email-input" placeholder="ornek@mail.com"
-                    style="width: 100%; border-radius: var(--radius-md); border: 1px solid var(--border); padding: 0.75rem 1rem; background-color: var(--bg-main); color: var(--text-primary); outline: none;">
+                <label for="auth-email-input" data-i18n="auth_email_label">E-posta</label>
+                <input type="email" id="auth-email-input" placeholder="ornek@mail.com" style="width: 100%; border-radius: var(--radius-md); border: 1px solid var(--border); padding: 0.75rem 1rem; background-color: rgba(0,0,0,0.2); color: white; outline: none;">
             </div>
 
             <div class="form-group" style="text-align: left;">
-                <label for="auth-password-input">Şifre</label>
-                <input type="password" id="auth-password-input" placeholder="••••••••"
-                    style="width: 100%; border-radius: var(--radius-md); border: 1px solid var(--border); padding: 0.75rem 1rem; background-color: var(--bg-main); color: var(--text-primary); outline: none;">
+                <label for="auth-password-input" data-i18n="auth_pass_label">Şifre</label>
+                <input type="password" id="auth-password-input" placeholder="••••••••" style="width: 100%; border-radius: var(--radius-md); border: 1px solid var(--border); padding: 0.75rem 1rem; background-color: rgba(0,0,0,0.2); color: white; outline: none;">
             </div>
 
-            <button id="auth-action-btn" class="primary-btn" style="margin-top: 1rem;">Giriş Yap</button>
+            <button id="auth-action-btn" class="primary-btn w-100" style="margin-top: 1rem;" data-i18n="auth_login_btn">Giriş Yap</button>
 
             <div id="auth-error-msg" class="status-msg text-danger" style="margin-top: 0.5rem; height: 1.5rem;"></div>
 
             <p class="text-xs text-secondary" style="margin-top: 1rem;">
-                <span id="auth-switch-text">Hesabın yok mu?</span>
-                <a href="#" id="auth-switch-btn" class="text-accent"
-                    style="text-decoration:none; font-weight:bold;">Kayıt Ol</a>
+                <span id="auth-switch-text" data-i18n="auth_no_account">Hesabın yok mu?</span> 
+                <a href="#" id="auth-switch-btn" class="text-accent" style="text-decoration:none; font-weight:bold;" data-i18n="auth_register_link">Kayıt Ol</a>
             </p>
         </div>
     </div>
 
-    <!-- Supabase SDK -->
+    <!-- Supabase SDK & Landing Script -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="app.js"></script>
+    <script src="landing.js"></script>
 </body>
-
 </html>

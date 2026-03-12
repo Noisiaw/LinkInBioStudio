@@ -131,13 +131,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Load Profile Data from Supabase
                     await loadProfileFromDB(session.user.id);
                 } else {
-                    // Update UI for logged-out user
-                    if (authTriggerBtn) {
-                        authTriggerBtn.innerHTML = '<i class="fa-solid fa-user"></i> <span id="auth-trigger-text">Giriş Yap</span>';
-                        authTriggerBtn.style.backgroundColor = 'var(--accent)';
-                        authTriggerBtn.style.color = 'white';
+                    const params = new URLSearchParams(window.location.search);
+                    const viewUser = params.get('u');
+                    
+                    // If not viewing a public profile and no session exists, boot them to the landing page
+                    if (!viewUser && window.location.pathname.includes('editor.html')) {
+                        window.location.href = '/'; 
+                        return;
                     }
-                    // Load from LocalStorage if logged out
+                    
+                    // Update UI for logged-out user (Fallback for view mode)
+                    if (authTriggerBtn) {
+                        authTriggerBtn.style.display = 'none'; // Hide auth button entirely in view mode
+                    }
+                    
+                    // Load from LocalStorage if logged out (Demo mode / Pre-auth)
                     loadFromLocalStorage();
                 }
             });
