@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Süper Yönetici - LinkInBio Studio</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #3b82f6;
+            --danger: #ef4444;
+            --success: #10b981;
+            --border: #334155;
+            --radius: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Header */
+        header {
+            background-color: var(--bg-secondary);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        /* Buttons */
+        .btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn.outline {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .btn.outline:hover {
+            background-color: var(--border);
+            color: var(--text-primary);
+        }
+
+        .btn.danger {
+            background-color: transparent;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+        
+        .btn.danger:hover {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background-color: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .stat-card .title {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-card .value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        /* Table Section */
+        .table-container {
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background-color: rgba(255, 255, 255, 0.02);
+            padding: 1rem 1.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 1rem 1.5rem;
+            font-size: 0.875rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Avatar */
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge.pro {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+        }
+
+        .badge.free {
+            background-color: var(--border);
+            color: var(--text-secondary);
+        }
+
+        /* Security Gate */
+        #auth-gate {
+            position: fixed;
+            inset: 0;
+            background-color: var(--bg-main);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gate-card {
+            background-color: var(--bg-secondary);
+            padding: 3rem;
+            border-radius: var(--radius);
+            text-align: center;
+            max-width: 400px;
+            border: 1px solid var(--border);
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Security Gate (Visible until Auth is verified) -->
+    <div id="auth-gate">
+        <div class="gate-card">
+            <div class="spinner"></div>
+            <h3>Yönetici Yetkisi Denetleniyor...</h3>
+            <p style="color: var(--text-secondary); margin-top: 1rem; font-size: 0.875rem;">Sadece yetkili süper yöneticiler bu sayfaya erişebilir.</p>
+            <div id="gate-error" style="color: var(--danger); margin-top: 1rem; font-weight: 500; display: none;"></div>
+            <a href="/" class="btn outline" style="margin-top: 1.5rem; width: 100%; justify-content: center;">Ana Sayfaya Dön</a>
+        </div>
+    </div>
+
+    <!-- Admin App (Hidden until Auth is verified) -->
+    <div id="admin-app" style="display: none; height: 100vh; flex-direction: column;">
+        <header>
+            <div class="logo">
+                <i class="fa-solid fa-shield-halved text-accent"></i> Yönetici Paneli
+            </div>
+            <div class="header-actions">
+                <a href="/editor.html" class="btn outline"><i class="fa-solid fa-pen-to-square"></i> Kendi Editörüme Dön</a>
+                <button id="logout-btn" class="btn danger"><i class="fa-solid fa-power-off"></i> Güvenli Çıkış</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- System Status -->
+            <div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-end;">
+                <div>
+                    <h1 style="font-size: 1.875rem; margin-bottom: 0.5rem;">Sistem Özeti</h1>
+                    <p style="color: var(--text-secondary);">LinkInBio Studio üzerindeki tüm hareketleri ve kayıtlı kullanıcıları buradan yönetebilirsiniz.</p>
+                </div>
+                <button id="refresh-btn" class="btn"><i class="fa-solid fa-rotate-right"></i> Verileri Yenile</button>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="title">Toplam Kayıtlı Üye</div>
+                    <div class="value" id="stat-total-users">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="title">Pro Üyeler</div>
+                    <div class="value" id="stat-pro-users" style="color: #fbbf24;">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="title">Oluşturulan Link Sayısı</div>
+                    <div class="value" id="stat-total-links">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="title">Toplam Sayfa Görüntülenmesi</div>
+                    <div class="value" id="stat-total-views">-</div>
+                </div>
+            </div>
+
+            <!-- Users Table -->
+            <div class="table-container">
+                <div style="padding: 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                    <h2 style="font-size: 1.25rem;">Kullanıcı Listesi</h2>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kullanıcı</th>
+                            <th>Kayıt URL'i</th>
+                            <th>Paket</th>
+                            <th>Link & Sosyal</th>
+                            <th>Görüntülenme</th>
+                            <th>Aksiyonlar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table-body">
+                        <!-- Rows will be injected here by admin.js -->
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                                <div class="spinner" style="margin: 0 auto; width: 24px; height: 24px; border-width: 2px;"></div>
+                                <div style="margin-top: 1rem;">Veriler çekiliyor... Eğer sadece kendinizi görüyorsanız, Supabase RLS yetkisi açılmamış demektir.</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Supabase SDK & Admin Script -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
